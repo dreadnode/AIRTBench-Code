@@ -4,7 +4,6 @@ RUN pip install \
     torch \
     torchvision \
     torchaudio \
-    torchvision \
     catboost \
     GPy \
     lightgbm \
