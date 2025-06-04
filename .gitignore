@@ -172,15 +172,6 @@ runs/*.jsonl
 # Datasets
 
 datasets/
-
-# Callisto
-
-callisto/challenges/public*
-
-# JSON we want
-
-!callisto/analysis/openai_challenges.json
-
 *.parquet
 *.json
 *.csv

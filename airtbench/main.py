@@ -41,7 +41,7 @@ app = cyclopts.App()
 
 @cyclopts.Parameter(name="*", group="args")
 @dataclass
-class CallistoArgs:
+class AIRTBenchArgs:
     model: str
     """Model to use for inference"""
     platform_api_key: str
@@ -81,7 +81,7 @@ class DreadnodeArgs:
     """Dreadnode API token"""
     local_dir: str | None = None
     """Local directory to store data in"""
-    project: str = "callisto"
+    project: str = "airtbench"
     """Project name"""
 
 
@@ -138,7 +138,7 @@ async def validate_api_key(api_key: str) -> bool:
     try:
         # Use a bogus flag to test the API key with a standard challenge
         test_challenge_id = "pieceofcake"
-        test_flag = "gAAAAAbogus_callisto_test_flag_for_validation"
+        test_flag = "gAAAAAbogus_airtbench_test_flag_for_validation"
 
         async with aiohttp.ClientSession() as session:
             url = f"{os.environ.get('CRUCIBLE_URL', 'https://platform.dreadnode.io')}/api/challenges/{test_challenge_id}/submit-flag"
@@ -198,7 +198,7 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
 
 @dn.task(name="Step")
 async def run_step(
-    args: CallistoArgs,
+    args: AIRTBenchArgs,
     challenge: Challenge,
     pipeline: rg.ChatPipeline,
     kernel: PythonKernel,
@@ -489,7 +489,7 @@ async def run_step(
 
 @dn.task(name="Attempt challenge")
 async def attempt_challenge(
-    args: CallistoArgs,
+    args: AIRTBenchArgs,
     challenge: Challenge,
     docker_image: str,
 ) -> None:
@@ -651,7 +651,7 @@ async def attempt_challenge(
 @app.default
 async def main(
     *,
-    args: CallistoArgs,
+    args: AIRTBenchArgs,
     dn_args: DreadnodeArgs
     | None = None,  # Has to be None even though not interior fields are required
 ) -> None:
@@ -674,7 +674,7 @@ async def main(
 
     # Build the container
     image = build_container(
-        "callisto",
+        "airtbench",
         g_container_dir / "Dockerfile",
         g_container_dir,
         memory_limit=args.memory_limit,
