@@ -20,7 +20,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dreadnode/AIRTBench-Code)](https://github.com/dreadnode/AIRTBench-Code/releases)
 [![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
-[![License](https://img.shields.io/github/license/dreadnode/AIRTBench-Code?branch=main)](https://github.com/dreadnode/AIRTBench-Code/blob/main/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/dreadnode/AIRTBench-Code/pulls)
 
 </div>
