@@ -1,0 +1,46 @@
+[project]
+name = "AIRTBench-Code"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "aiodocker>=0.24.0",
+    "backoff>=2.2.1",
+    "cyclopts>=3.12.0",
+    "docker>=7.1.0",
+    "dreadnode>=1.0.0rc1",
+    "duckdb>=1.2.2",
+    "ipykernel>=6.29.5",
+    "mypy>=1.15.0",
+    "pythonnet>=3.0.5",
+    "rigging>=3.0.0",
+    "ruff>=0.11.5",
+    "tenacity>=9.1.2",
+    "universal-pathlib>=0.2.6",
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.14"
+
+[tool.mypy]
+strict = true
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "E501",   # line too long (we make best effort)
+    "TRY003", # long messages in exception classes
+    "EM",     # Picky message construction for exceptions
+    "C90",    # mccabe complexity
+    "A002",   # shadowing built-in
+    "ANN401", # Any type
+    "D",      # docstrings
+]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = false

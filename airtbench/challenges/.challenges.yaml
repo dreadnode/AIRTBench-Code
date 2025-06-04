@@ -1,0 +1,432 @@
+arrayz1:
+  category: Data Analysis
+  difficulty: easy
+  name: ArrayZ 1 - Data Analysis
+  notebook: arrayz1.ipynb
+  is_llm: false
+arrayz2:
+  category: Data Analysis
+  difficulty: medium
+  name: ArrayZ 2 - Data Analysis
+  notebook: arrayz2.ipynb
+  is_llm: false
+audit:
+  category: Model Data Tampering & Analysis
+  difficulty: medium
+  name: Audit - Model Analysis
+  notebook: audit.ipynb
+  is_llm: false
+autopilot1:
+  category: Evasion (Image)
+  difficulty: easy
+  name: Autopilot 1 - Object Detection
+  notebook: autopilot1.ipynb
+  is_llm: false
+autopilot2:
+  category: Evasion (Image)
+  difficulty: medium
+  name: Autopilot 2 - Object Detection
+  notebook: autopilot2.ipynb
+  is_llm: false
+autopilot3:
+  category: Evasion (Image)
+  difficulty: hard
+  name: Autopilot 3 - Object Detection
+  notebook: autopilot3.ipynb
+  is_llm: false
+bad2good:
+  category: ''
+  difficulty: easy
+  name: Bad2good
+  notebook: bad2good.ipynb
+  is_llm: false
+baseball:
+  category: ''
+  difficulty: easy
+  name: Baseball
+  notebook: baseball.ipynb
+  is_llm: false
+bear1:
+  category: Data Analysis
+  difficulty: easy
+  name: Bear 1 - Data Exploration
+  notebook: bear1.ipynb
+  is_llm: false
+bear2:
+  category: Extraction
+  difficulty: easy
+  name: Bear 2 - Model Extraction
+  notebook: bear2.ipynb
+  is_llm: false
+bear3:
+  category: Fingerprinting
+  difficulty: easy
+  name: Bear 3 - Model Fingerprinting
+  notebook: bear3.ipynb
+  is_llm: false
+bear4:
+  category: Prompt Injection
+  difficulty: easy
+  name: Bear 4 - Prompt Injection
+  notebook: bear4.ipynb
+  is_llm: true
+blindspot:
+  category: Evasion (Image)
+  difficulty: medium
+  name: Blind Spot - Object Detection
+  notebook: blindspot.ipynb
+  is_llm: false
+brig1:
+  category: System Exploitation
+  difficulty: medium
+  name: Brig 1 - Escape the Classifier
+  notebook: brig1.ipynb
+  is_llm: true
+brig2:
+  category: System Exploitation
+  difficulty: medium
+  name: Brig 2 - Escape the Summarizer
+  notebook: brig2.ipynb
+  is_llm: true
+canadianeh:
+  category: ''
+  difficulty: easy
+  name: Canadian Eh
+  notebook: canadianeh.ipynb
+  is_llm: true
+carbender:
+  category: Evasion (Poisoning)
+  difficulty: medium
+  name: Carbender - Model Evasion
+  notebook: carbender.ipynb
+  is_llm: false
+cluster1:
+  category: Data Analysis
+  difficulty: medium
+  name: Cluster 1 - Misclassification
+  notebook: cluster1.ipynb
+  is_llm: false
+cluster2:
+  category: Data Analysis
+  difficulty: easy
+  name: Cluster 2 - Clustering
+  notebook: cluster2.ipynb
+  is_llm: false
+cluster3:
+  category: Data Analysis
+  difficulty: hard
+  name: Cluster 3 - Hyperspace
+  notebook: cluster3.ipynb
+  is_llm: false
+count_mnist:
+  category: Data Analysis
+  difficulty: easy
+  name: Count - MNIST
+  notebook: count_mnist.ipynb
+  is_llm: false
+cubic:
+  category: Inversion
+  difficulty: medium
+  name: Cubic
+  notebook: cubic.ipynb
+  is_llm: false
+deface:
+  category: Evasion (Image)
+  difficulty: easy
+  name: Deface - Generative Image
+  notebook: deface.ipynb
+  is_llm: false
+deface2:
+  category: Evasion (Image)
+  difficulty: medium
+  name: Deface 2 - Generative Image
+  notebook: deface2.ipynb
+  is_llm: false
+extractor:
+  category: System Prompt Leakage
+  difficulty: easy
+  name: Extractor
+  notebook: extractor.ipynb
+  is_llm: true
+extractor2:
+  category: System Prompt Leakage
+  difficulty: easy
+  name: Extractor 2
+  notebook: extractor2.ipynb
+  is_llm: true
+fragile:
+  category: Prompt Injection (RAG)
+  difficulty: medium
+  name: FRAGile
+  notebook: fragile.ipynb
+  is_llm: true
+genigma:
+  category: Inversion
+  difficulty: medium
+  name: Genigma
+  notebook: genigma.ipynb
+  is_llm: false
+granny:
+  category: Evasion (Image)
+  difficulty: medium
+  name: Granny - Adversarial Images
+  notebook: granny.ipynb
+  is_llm: false
+granny_jpg:
+  category: Evasion (Image)
+  difficulty: hard
+  name: Granny 2 - Adversarial JPGs
+  notebook: granny_jpg.ipynb
+  is_llm: false
+guess_whos_back:
+  category: Data Analysis
+  difficulty: easy
+  name: Guess Who's Back - Data Analysis
+  notebook: guess_whos_back.ipynb
+  is_llm: false
+hotdog:
+  category: ''
+  difficulty: easy
+  name: Hotdog
+  notebook: hotdog.ipynb
+  is_llm: false
+hush:
+  category: Evasion (Audio)
+  difficulty: medium
+  name: Hush - Audio Generation
+  notebook: hush.ipynb
+  is_llm: false
+inversion:
+  category: Inversion
+  difficulty: hard
+  name: Inversion - Invert the Model
+  notebook: inversion.ipynb
+  is_llm: false
+librarian:
+  category: Prompt Injection (RAG)
+  difficulty: medium
+  name: Librarian - LLM SQL Helper
+  notebook: librarian.ipynb
+  is_llm: true
+miner:
+  category: Prompt Injection
+  difficulty: medium
+  name: Miner
+  notebook: miner.ipynb
+  is_llm: true
+mirage:
+  category: Data Analysis
+  difficulty: hard
+  name: Mirage
+  notebook: mirage.ipynb
+  is_llm: false
+mumble:
+  category: Inversion
+  difficulty: medium
+  name: Mumble - Confuse the LLM
+  notebook: mumble.ipynb
+  is_llm: true
+murderbot:
+  category: ''
+  difficulty: medium
+  name: Murderbot
+  notebook: murderbot.ipynb
+  is_llm: false
+palimpsest:
+  category: Data Analysis
+  difficulty: medium
+  name: Palimpsest
+  notebook: palimpsest.ipynb
+  is_llm: false
+passphrase:
+  category: Evasion (Data)
+  difficulty: hard
+  name: Passphrase - Adversarial Semantics
+  notebook: passphrase.ipynb
+  is_llm: false
+phantomcheque:
+  category: Evasion (Image)
+  difficulty: medium
+  name: Phantom Cheque - Model Extraction
+  notebook: phantomcheque.ipynb
+  is_llm: false
+pickle:
+  category: System Exploitation
+  difficulty: hard
+  name: Pickle - Malicious Blobs
+  notebook: pickle.ipynb
+  is_llm: false
+pieceofcake:
+  category: ''
+  difficulty: easy
+  name: Piece of Cake
+  notebook: pieceofcake.ipynb
+  is_llm: true
+pirate_flag:
+  category: Prompt Injection (RAG)
+  difficulty: easy
+  name: Pirate Flag - RAG Escape
+  notebook: pirate_flag.ipynb
+  is_llm: true
+pixelated:
+  category: System Exploitation
+  difficulty: hard
+  name: Pixelated - Adversarial OCR
+  notebook: pixelated.ipynb
+  is_llm: false
+popcorn:
+  category: Prompt Injection
+  difficulty: medium
+  name: Popcorn
+  notebook: popcorn.ipynb
+  is_llm: true
+probe:
+  category: System Prompt Leakage
+  difficulty: easy
+  name: Probe
+  notebook: probe.ipynb
+  is_llm: true
+puppeteer1:
+  category: Prompt Injection
+  difficulty: easy
+  name: Puppeteer 1 - Basic Prompting
+  notebook: puppeteer1.ipynb
+  is_llm: true
+puppeteer2:
+  category: Prompt Injection
+  difficulty: easy
+  name: Puppeteer 2 - Restricted Prompting
+  notebook: puppeteer2.ipynb
+  is_llm: true
+puppeteer3:
+  category: Prompt Injection
+  difficulty: medium
+  name: Puppeteer 3 - Limited Prompting
+  notebook: puppeteer3.ipynb
+  is_llm: true
+puppeteer4:
+  category: Prompt Injection
+  difficulty: medium
+  name: Puppeteer 4 - Tricky Prompting
+  notebook: puppeteer4.ipynb
+  is_llm: true
+semantle:
+  category: Extraction
+  difficulty: easy
+  name: Semantle - One Word
+  notebook: semantle.ipynb
+  is_llm: false
+semantle2:
+  category: Extraction
+  difficulty: medium
+  name: Semantle 2 - Phrase
+  notebook: semantle2.ipynb
+  is_llm: false
+sonotype:
+  category: Evasion (Audio)
+  difficulty: hard
+  name: Sonotype - Audio Extraction
+  notebook: sonotype.ipynb
+  is_llm: false
+spanglish:
+  category: Prompt Injection
+  difficulty: easy
+  name: Spanglish - Escape the Translator
+  notebook: spanglish.ipynb
+  is_llm: true
+squeeze1:
+  category: Prompt Injection
+  difficulty: easy
+  name: Squeeze 1 - Token Limitation
+  notebook: squeeze1.ipynb
+  is_llm: true
+squeeze2:
+  category: Prompt Injection
+  difficulty: easy
+  name: Squeeze 2 - Token Limitation
+  notebook: squeeze2.ipynb
+  is_llm: true
+taxi:
+  category: Data Analysis
+  difficulty: medium
+  name: Taxi - Data Analysis
+  notebook: taxi.ipynb
+  is_llm: false
+turtle:
+  category: Prompt Injection
+  difficulty: easy
+  name: Turtle
+  notebook: turtle.ipynb
+  is_llm: true
+voyager:
+  category: Data Analysis
+  difficulty: medium
+  name: Voyager - Data Analysis
+  notebook: voyager.ipynb
+  is_llm: false
+voyager2:
+  category: Data Analysis
+  difficulty: easy
+  name: Voyager 2 - Data Analysis
+  notebook: voyager2.ipynb
+  is_llm: false
+waf:
+  category: ''
+  difficulty: easy
+  name: WAF
+  notebook: waf.ipynb
+  is_llm: false
+whatistheflag:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 1 - Basic
+  notebook: whatistheflag.ipynb
+  is_llm: true
+whatistheflag2:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 2 - Blocked Words
+  notebook: whatistheflag2.ipynb
+  is_llm: true
+whatistheflag3:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 3 - Identity Crisis
+  notebook: whatistheflag3.ipynb
+  is_llm: true
+whatistheflag4:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 4 - Guarded
+  notebook: whatistheflag4.ipynb
+  is_llm: true
+whatistheflag5:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 5 - Safety First
+  notebook: whatistheflag5.ipynb
+  is_llm: true
+whatistheflag6:
+  category: Prompt Injection
+  difficulty: easy
+  name: What is the Flag 6 - Safety Second
+  notebook: whatistheflag6.ipynb
+  is_llm: true
+whats_my_ip:
+  category: Prompt Injection (RAG)
+  difficulty: easy
+  name: What's my IP - RAG Escape
+  notebook: whats_my_ip.ipynb
+  is_llm: true
+whats_my_ip2:
+  category: Prompt Injection (RAG)
+  difficulty: easy
+  name: What's my IP 2 - No Bruno
+  notebook: whats_my_ip2.ipynb
+  is_llm: true
+wifi:
+  category: ''
+  difficulty: easy
+  name: WiFi
+  notebook: wifi.ipynb
+  is_llm: false
