@@ -1,0 +1,45 @@
+name: TODOs Scanner
+
+on: pull_request
+
+jobs:
+  scan_todos:
+    runs-on: ubuntu-latest
+    name: Scan TODOs in TEX files
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+        with:
+          fetch-depth: 0  # Fetch all history to compare changes properly
+
+      - name: Find TODOs in TEX files
+        id: find_todos
+        run: |
+          # Create a formatted list of TODOs with file paths
+          echo "TODOS<<EOF" >> $GITHUB_OUTPUT
+
+          # Find all TODOs in .tex files recursively in the paper directory
+          grep -r "TODO" --include="*.tex" ./paper | while read -r todo_line; do
+            file_path=$(echo "$todo_line" | cut -d':' -f1)
+            todo_text=$(echo "$todo_line" | cut -d':' -f2-)
+            echo "- **${file_path}**: \`${todo_text}\`" >> $GITHUB_OUTPUT
+          done
+
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Count TODOs to determine if we should comment
+          TODO_COUNT=$(grep -r "TODO" --include="*.tex" ./paper | wc -l)
+          echo "TODO_COUNT=$TODO_COUNT" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with TODOs
+        if: steps.find_todos.outputs.TODO_COUNT != '0'
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
+        with:
+          message: |
+            ## 📝 TODOs Found in LaTeX Files
+
+            This PR contains the following TODOs that should be addressed before merging:
+
+            ${{ steps.find_todos.outputs.TODOS }}
+
+            Please review and address these TODOs before finalizing this PR.

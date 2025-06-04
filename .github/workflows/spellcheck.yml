@@ -1,0 +1,15 @@
+name: Spellcheck Action
+on: push
+
+jobs:
+  build:
+    name: Spellcheck
+    runs-on: ubuntu-latest
+    steps:
+    # The checkout step
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 #v4.2.2
+    - uses: rojopolis/spellcheck-github-actions@584b2ae95998967a53af7fbfb7f5b15352c38748 #v0.49.0
+      name: Spellcheck
+      with:
+        source_files: paper/*
+        task_name: Markdown
