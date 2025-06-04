@@ -15,9 +15,13 @@
 <!-- BEGIN_AUTO_BADGES -->
 <div align="center">
 
+[![Pre-Commit](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/pre-commit.yaml)
+[![Renovate](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/renovate.yaml/badge.svg)](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/renovate.yaml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Super-Linter](https://github.com/dreadnode/AIRTBench/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
-[![Spell-Check](https://github.com/dreadnode/AIRTBench/actions/workflows/spellcheck.yml/badge.svg)](https://github.com/rojopolis/spellcheck-github-actions)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/dreadnode/AIRTBench-Code)](https://github.com/dreadnode/AIRTBench-Code/releases)
+[![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
+[![License](https://img.shields.io/github/license/dreadnode/AIRTBench-Code?branch=main)](https://github.com/dreadnode/AIRTBench-Code/blob/main/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/dreadnode/AIRTBench-Code/pulls)
 
 </div>
 <!-- END_AUTO_BADGES -->
@@ -32,6 +36,8 @@ The paper is available on [arXiV](TODO) and [ACL Anthology](TODO).
   - [Setup](#setup)
   - [Run the Evaluation](#run-the-evaluation)
   - [Model requests](#model-requests)
+  - [Support the Project and Contributing](#support-the-project-and-contributing)
+    - [Star History](#star-history)
 
 ## Setup
 
@@ -74,3 +80,15 @@ Check out [the challenge manifest](./ai_ctf/challenges/.challenges.yaml) to see 
 ## Model requests
 
 If you know of a model that may be interesting to analyze, but do not have the resources to run it yourself, feel free to open a feature request via a GitHub issue.
+
+## Support the Project and Contributing
+
+We welcome any issues or contributions to the project, share the treasure! If you like our project, please feel free to drop us some love <3
+
+### Star History
+
+[![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
+
+By watching the repo, you can also be notified of any upcoming releases.
+
+<img src="https://api.star-history.com/svg?repos=dreadnode/AIRTBench-Code&type=Date" width="600" height="400">
