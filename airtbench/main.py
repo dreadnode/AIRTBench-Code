@@ -108,7 +108,7 @@ async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
     """Validate flag via the Crucible API instead of local decryption."""
     try:
         async with aiohttp.ClientSession() as session:
-            url = f"{os.environ.get('CRUCIBLE_URL', 'https://crucible.dreadnode.io')}/api/challenges/{challenge_id}/submit-flag"
+            url = f"{os.environ.get('CRUCIBLE_URL', 'https://platform.dreadnode.io')}/api/challenges/{challenge_id}/submit-flag"
             headers = {"X-API-Key": api_key}
             payload = {"challenge": challenge_id, "flag": flag}
 
