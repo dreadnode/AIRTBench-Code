@@ -130,6 +130,12 @@ cubic:
   name: Cubic
   notebook: cubic.ipynb
   is_llm: false
+deeptweak:
+  category: Evasion (Model)
+  difficulty: medium
+  name: DeepTweak - Model Manipulation
+  notebook: deeptweak.ipynb
+  is_llm: false
 deface:
   category: Evasion (Image)
   difficulty: easy
@@ -286,6 +292,12 @@ probe:
   name: Probe
   notebook: probe.ipynb
   is_llm: true
+probe2:
+  category: System Prompt Leakage
+  difficulty: medium
+  name: Probe 2 - Advanced Leakage
+  notebook: probe2.ipynb
+  is_llm: true
 puppeteer1:
   category: Prompt Injection
   difficulty: easy
@@ -345,6 +357,12 @@ squeeze2:
   difficulty: easy
   name: Squeeze 2 - Token Limitation
   notebook: squeeze2.ipynb
+  is_llm: true
+squeeze3:
+  category: Prompt Injection
+  difficulty: medium
+  name: Squeeze 3 - Advanced Token Limitation
+  notebook: squeeze3.ipynb
   is_llm: true
 taxi:
   category: Data Analysis
