@@ -105,7 +105,7 @@ class GiveUp(rg.Model):
 
 @dn.task(name="Check flag with API")
 async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
-    """Validate flag via the Crucible API instead of local decryption."""
+    """Validate flag via the Crucible API"""
     try:
         async with aiohttp.ClientSession() as session:
             url = f"{os.environ.get('CRUCIBLE_URL', 'https://platform.dreadnode.io')}/api/challenges/{challenge_id}/submit-flag"
