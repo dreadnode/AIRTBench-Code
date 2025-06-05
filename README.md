@@ -60,7 +60,7 @@ uv run -m airtbench --help
 ### Basic Usage
 
 ```bash
-uv run -m airtbench --model $MODEL --project $PROJECT --platform-api-key $DREADNODE_API_KEY --token $DREADNODE_API_TOKEN --server https://platform.dreadnode.io --max-steps 100 --inference_timeout 240 --enable-cache --no-give-up --challenges bear1 bear2
+uv run -m airtbench --model $MODEL --project $PROJECT --platform-api-key $DREADNODE_TOKEN --token $DREADNODE_TOKEN --server https://platform.dreadnode.io --max-steps 100 --inference_timeout 240 --enable-cache --no-give-up --challenges bear1 bear2
 ```
 
 ### Challenge Filtering
