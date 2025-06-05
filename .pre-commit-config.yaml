@@ -74,7 +74,6 @@ repos:
           - "types-PyYAML"
           - "types-requests"
           - "types-setuptools"
-        exclude: (callisto/scripts/|scripts/challenge_manager\.py)
 
   - repo: local
     hooks:
@@ -90,14 +89,3 @@ repos:
         entry: .hooks/prettier.sh
         language: script
         types: [json, yaml]
-
-      - id: check-challenges
-        name: Check challenge updates
-        entry: python scripts/challenge_manager.py --check
-        language: python
-        pass_filenames: false
-        always_run: true
-        files: ^callisto/challenges/
-        additional_dependencies:
-          - pyyaml
-          - jinja2

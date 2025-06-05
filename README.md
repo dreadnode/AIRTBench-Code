@@ -34,9 +34,9 @@ The paper is available on [arXiV](TODO) and [ACL Anthology](TODO).
 - [Code for the "AIRTBench" AI Red Teaming Agent](#code-for-the-airtbench-ai-red-teaming-agent)
   - [Setup](#setup)
   - [Run the Evaluation](#run-the-evaluation)
+    - [Basic Usage](#basic-usage)
+    - [Challenge Filtering](#challenge-filtering)
   - [Model requests](#model-requests)
-  - [Support the Project and Contributing](#support-the-project-and-contributing)
-    - [Star History](#star-history)
 
 ## Setup
 
@@ -50,17 +50,25 @@ uv sync
 
 <mark>In order to run the code, you will need access to the Dreadnode strikes platform, see the [docs](https://docs.Dreadnode.io/strikes/overview) or submit for the Strikes waitlist [here](https://platform.dreadnode.io/waitlist/strikes)</mark>.
 
-This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./ai_ctf/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Can Language Models Autonomously Exploit
+This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Can Language Models Autonomously Exploit
 Language Models?](https://arxiv.org/abs/TODO). # TODO: Add link to paper once published.
 
 ```bash
-uv run -m ai_ctf --help
+uv run -m airtbench --help
 ```
+
+### Basic Usage
+
+```bash
+uv run -m airtbench --model $MODEL --project $PROJECT --platform-api-key $DREADNODE_TOKEN --token $DREADNODE_TOKEN --server https://platform.dreadnode.io --max-steps 100 --inference_timeout 240 --enable-cache --no-give-up --challenges bear1 bear2
+```
+
+### Challenge Filtering
 
 To run the agent against challenges that match the `is_llm:true` criteria, which are LLM-based challenges, you can use the following command:
 
 ```bash
-uv run -m ai_ctf --model <model> --llm-challenges-only
+uv run -m airtbench --model <model> --llm-challenges-only
 ```
 
 The harness will automatically build the defined number of containers with the supplied flag, and load them
@@ -73,21 +81,9 @@ as needed to ensure they are network-isolated from each other. The process is ge
 5. If the CTF challenge is solved and flag is observed, the agent must submit the flag
 6. Otherwise run until an error, give up, or max-steps is reached
 
-Check out [the challenge manifest](./ai_ctf/challenges/.challenges.yaml) to see current challenges in scope.
+Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to see current challenges in scope.
 
 
 ## Model requests
 
 If you know of a model that may be interesting to analyze, but do not have the resources to run it yourself, feel free to open a feature request via a GitHub issue.
-
-## Support the Project and Contributing
-
-We welcome any issues or contributions to the project, share the treasure! If you like our project, please feel free to drop us some love <3
-
-### Star History
-
-[![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
-
-By watching the repo, you can also be notified of any upcoming releases.
-
-<img src="https://api.star-history.com/svg?repos=dreadnode/AIRTBench-Code&type=Date" width="600" height="400">
