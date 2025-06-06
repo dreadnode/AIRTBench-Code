@@ -33,6 +33,7 @@ The paper is available on [arXiV](TODO) and [ACL Anthology](TODO).
 
 - [Code for the "AIRTBench" AI Red Teaming Agent](#code-for-the-airtbench-ai-red-teaming-agent)
   - [Setup](#setup)
+  - [Documentation](#documentation)
   - [Run the Evaluation](#run-the-evaluation)
     - [Basic Usage](#basic-usage)
     - [Challenge Filtering](#challenge-filtering)
@@ -45,6 +46,10 @@ You can setup the virtual environment with uv:
 ```bash
 uv sync
 ```
+
+## Documentation
+
+Technical documentation for the AIRTBench agent is available in the [docs](https://docs.dreadnode.io/strikes/how-to/airtbench-agent) section of the Dreadnode documentation.
 
 ## Run the Evaluation
 
