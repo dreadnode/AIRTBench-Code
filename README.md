@@ -49,7 +49,7 @@ uv sync
 
 ## Documentation
 
-Technical documentation for the AIRTBench agent is available in the [docs](https://docs.dreadnode.io/strikes/how-to/airtbench-agent) section of the Dreadnode documentation.
+Technical documentation for the AIRTBench agent is available in the [Dreadnode Strikes documentation](https://docs.dreadnode.io/strikes/how-to/airtbench-agent).
 
 ## Run the Evaluation
 
