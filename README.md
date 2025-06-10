@@ -19,6 +19,9 @@
 [![Renovate](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/renovate.yaml/badge.svg)](https://github.com/dreadnode/AIRTBench-Code/actions/workflows/renovate.yaml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dreadnode/AIRTBench-Code)](https://github.com/dreadnode/AIRTBench-Code/releases)
+[![arXiv](https://img.shields.io/badge/arXiv-TODO-b31b1b.svg)](https://arxiv.org/abs/TODO)
+[![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/TODO)
+[![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/TODO)
 [![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/dreadnode/AIRTBench-Code/pulls)
 
@@ -29,14 +32,14 @@
 
 This repository contains the code for the AIRTBench AI red teaming agent. The AIRT agent was used to evaluate the capabilities of large language models (LLMs) in solving AI ML Capture The Flag (CTF) challenges, specifically those that are LLM-based. The agent is designed to autonomously exploit LLMs by solving challenges on the Dreadnode Strikes platform.
 
-The paper is available on [arXiV](TODO) and [ACL Anthology](TODO).
-
 - [Code for the "AIRTBench" AI Red Teaming Agent](#code-for-the-airtbench-ai-red-teaming-agent)
   - [Setup](#setup)
   - [Documentation](#documentation)
   - [Run the Evaluation](#run-the-evaluation)
     - [Basic Usage](#basic-usage)
     - [Challenge Filtering](#challenge-filtering)
+  - [Resources](#resources)
+  - [Citation](#citation)
   - [Model requests](#model-requests)
 
 ## Setup
@@ -55,8 +58,7 @@ Technical documentation for the AIRTBench agent is available in the [Dreadnode S
 
 <mark>In order to run the code, you will need access to the Dreadnode strikes platform, see the [docs](https://docs.Dreadnode.io/strikes/overview) or submit for the Strikes waitlist [here](https://platform.dreadnode.io/waitlist/strikes)</mark>.
 
-This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Can Language Models Autonomously Exploit
-Language Models?](https://arxiv.org/abs/TODO). # TODO: Add link to paper once published.
+This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Can Language Models Autonomously Exploit Language Models?](https://arxiv.org/abs/TODO). # TODO
 
 ```bash
 uv run -m airtbench --help
@@ -88,6 +90,25 @@ as needed to ensure they are network-isolated from each other. The process is ge
 
 Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to see current challenges in scope.
 
+## Resources
+
+- [📄 Paper on arXiv](https://arxiv.org/abs/TODO)
+- [🤗 Dataset on HuggingFace](https://huggingface.co/datasets/TODO)
+- [📝 Blog post](https://dreadnode.io/blog/TODO)
+
+## Citation
+
+If you find our work helpful, please use the following citations.
+
+```bibtex
+@misc{TODO,
+  title = {AIRTBench: Can Language Models Autonomously Exploit Language Models?},
+  author = {TODO},
+  year = {2023},
+  eprint = {arXiv:TODO},
+  url = {https://arxiv.org/abs/TODO}
+}
+```
 
 ## Model requests
 
