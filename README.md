@@ -39,6 +39,7 @@ This repository contains the code for the AIRTBench AI red teaming agent. The AI
     - [Basic Usage](#basic-usage)
     - [Challenge Filtering](#challenge-filtering)
   - [Resources](#resources)
+  - [Dataset](#dataset)
   - [Citation](#citation)
   - [Model requests](#model-requests)
 
@@ -93,8 +94,13 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 ## Resources
 
 - [📄 Paper on arXiv](https://arxiv.org/abs/TODO)
-- [🤗 Dataset on HuggingFace](https://huggingface.co/datasets/TODO)
 - [📝 Blog post](https://dreadnode.io/blog/TODO)
+
+## Dataset
+
+- The dataset is available in the latest GitHub release.
+- Download the dataset directly from the [dataset](./dataset/README.md) directory.
+- Alternative download from [🤗HuggingFace](https://huggingface.co/datasets/TODO)
 
 ## Citation
 
