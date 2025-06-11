@@ -1,4 +1,4 @@
-# Code for the "AIRTBench" AI Red Teaming Agent
+# AIRTBench: Autonomous AI Red Teaming Agent Code
 
 <div align="center">
 
@@ -30,9 +30,12 @@
 
 ---
 
-This repository contains the code for the AIRTBench AI red teaming agent. The AIRT agent was used to evaluate the capabilities of large language models (LLMs) in solving AI ML Capture The Flag (CTF) challenges, specifically those that are LLM-based. The agent is designed to autonomously exploit LLMs by solving challenges on the Dreadnode Strikes platform.
+This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO) and accompanying [blog post](https://blog.dreadnode.io/TODO).
 
-- [Code for the "AIRTBench" AI Red Teaming Agent](#code-for-the-airtbench-ai-red-teaming-agent)
+The AIRTBench agent is designed to evaluate the autonomous red teaming capabilities of large language models (LLMs) through AI/ML Capture The Flag (CTF) challenges. Our agent systematically exploits LLM-based targets by solving challenges on the Dreadnode Strikes platform, providing a standardized benchmark for measuring adversarial AI capabilities.
+
+- [AIRTBench: Autonomous AI Red Teaming Agent Code](#airtbench-autonomous-ai-red-teaming-agent-code)
+  - [Agent Harness Construction](#agent-harness-construction)
   - [Setup](#setup)
   - [Documentation](#documentation)
   - [Run the Evaluation](#run-the-evaluation)
@@ -42,6 +45,16 @@ This repository contains the code for the AIRTBench AI red teaming agent. The AI
   - [Dataset](#dataset)
   - [Citation](#citation)
   - [Model requests](#model-requests)
+
+## Agent Harness Construction
+
+The AIRTBench harness follows a modular architecture designed for extensibility and evaluation:
+
+<div align="center">
+  <img src="assets/airtbench_architecture_diagram_dark.png" alt="AIRTBench Architecture" width="50%">
+  <br>
+  <em>Figure: AIRTBench harness construction architecture showing the interaction between agent components, challenge interface, and evaluation framework.</em>
+</div>
 
 ## Setup
 
@@ -59,7 +72,7 @@ Technical documentation for the AIRTBench agent is available in the [Dreadnode S
 
 <mark>In order to run the code, you will need access to the Dreadnode strikes platform, see the [docs](https://docs.Dreadnode.io/strikes/overview) or submit for the Strikes waitlist [here](https://platform.dreadnode.io/waitlist/strikes)</mark>.
 
-This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO). # TODO
+This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile).
 
 ```bash
 uv run -m airtbench --help
