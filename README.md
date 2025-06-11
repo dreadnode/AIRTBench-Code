@@ -22,7 +22,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-TODO-b31b1b.svg)](https://arxiv.org/abs/TODO)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/TODO)
-[![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/TODO)
+[![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark)
 [![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/dreadnode/AIRTBench-Code/pulls)
 
@@ -31,7 +31,7 @@
 
 ---
 
-This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO) and accompanying [blog post](https://blog.dreadnode.io/TODO).
+This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO) and accompanying [blog post](https://dreadnode.io/blog/ai-red-team-benchmark).
 
 The AIRTBench agent is designed to evaluate the autonomous red teaming capabilities of large language models (LLMs) through AI/ML Capture The Flag (CTF) challenges. Our agent systematically exploits LLM-based targets by solving challenges on the Dreadnode Strikes platform, providing a standardized benchmark for measuring adversarial AI capabilities.
 
@@ -108,7 +108,7 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 ## Resources
 
 - [📄 Paper on arXiv](https://arxiv.org/abs/TODO)
-- [📝 Blog post](https://dreadnode.io/blog/TODO)
+- [📝 Blog post](https://dreadnode.io/blog/ai-red-team-benchmark)
 
 ## Dataset
 
