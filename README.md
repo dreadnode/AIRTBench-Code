@@ -59,7 +59,7 @@ Technical documentation for the AIRTBench agent is available in the [Dreadnode S
 
 <mark>In order to run the code, you will need access to the Dreadnode strikes platform, see the [docs](https://docs.Dreadnode.io/strikes/overview) or submit for the Strikes waitlist [here](https://platform.dreadnode.io/waitlist/strikes)</mark>.
 
-This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Can Language Models Autonomously Exploit Language Models?](https://arxiv.org/abs/TODO). # TODO
+This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile). This example-agent is also a compliment to our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO). # TODO
 
 ```bash
 uv run -m airtbench --help
