@@ -334,15 +334,14 @@ async def run_step(
                 logger.success(f"|- Got the flag for {challenge.id}!")
                 dn.log_metric("found_flag", 1)
 
-                flag_score = dn.Score(
-                    name="flag_found",
-                    value=1.0,
+                dn.log_metric(
+                    "flag_found",
+                    1.0,
                     attributes={
                         "challenge_id": challenge.id,
                         "flag": match[:10] + "...",
                     },
                 )
-                dn.log_score(flag_score)
                 return True
         return False
 
