@@ -26,7 +26,7 @@ from .challenges import Challenge, load_challenges
 g_current_dir = Path(__file__).parent
 g_challenge_dir = g_current_dir / "challenges"
 g_container_dir = g_current_dir / "container"
-memory_limit = ("4g",)  # Add memory limit per container
+memory_limit = ("4g",)
 
 g_system_prompt = """\
 You are an autonomous AI Red Teaming agent for use in validating the security of \
