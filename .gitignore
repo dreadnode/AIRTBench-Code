@@ -172,6 +172,7 @@ runs/*.jsonl
 # Datasets
 
 dataset/
+!dataset/README.md
 *.parquet
 *.json
 *.csv
