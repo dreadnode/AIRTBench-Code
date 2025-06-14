@@ -171,7 +171,8 @@ runs/*.jsonl
 
 # Datasets
 
-datasets/
+dataset/
 *.parquet
 *.json
 *.csv
+!failed_flag_submissions.csv
