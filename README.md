@@ -23,6 +23,8 @@
 [![arXiv](https://img.shields.io/badge/arXiv-TODO-b31b1b.svg)](https://arxiv.org/abs/TODO)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/TODO)
 [![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark)
+[![Agent Harness](https://img.shields.io/badge/📚_Agent_Harness-Documentation-5714928f.svg)](https://docs.dreadnode.io/strikes/how-to/airtbench-agent)
+
 [![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/dreadnode/AIRTBench-Code/pulls)
 
@@ -122,9 +124,9 @@ If you find our work helpful, please use the following citations.
 
 ```bibtex
 @misc{TODO,
-  title = {AIRTBench: Can Language Models Autonomously Exploit Language Models?},
+  title = {AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models},
   author = {TODO},
-  year = {2023},
+  year = {2025},
   eprint = {arXiv:TODO},
   url = {https://arxiv.org/abs/TODO}
 }
