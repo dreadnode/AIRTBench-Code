@@ -116,7 +116,7 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 
 - The dataset is available in the latest GitHub release.
 - Download the dataset directly from the [dataset](./dataset/README.md) directory.
-- Alternative download from [🤗HuggingFace](https://huggingface.co/datasets/TODO)
+- Alternative download from [🤗Hugging Face](https://huggingface.co/datasets/TODO)
 
 ## Citation
 
