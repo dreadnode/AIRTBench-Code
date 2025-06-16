@@ -54,7 +54,7 @@ The AIRTBench agent is designed to evaluate the autonomous red teaming capabilit
 The AIRTBench harness follows a modular architecture designed for extensibility and evaluation:
 
 <div align="center">
-  <img src="assets/airtbench_architecture_diagram_dark.png" alt="AIRTBench Architecture" width="75%">
+  <img src="assets/airtbench_architecture_diagram_dark.png" alt="AIRTBench Architecture" width="100%">
   <br>
   <em>Figure: AIRTBench harness construction architecture showing the interaction between agent components, challenge interface, and evaluation framework.</em>
 </div>
