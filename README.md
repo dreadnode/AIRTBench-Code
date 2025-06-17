@@ -21,7 +21,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dreadnode/AIRTBench-Code)](https://github.com/dreadnode/AIRTBench-Code/releases)
 
 [![arXiv](https://img.shields.io/badge/arXiv-TODO-b31b1b.svg)](https://arxiv.org/abs/TODO)
-[![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/TODO)
+[![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/dreadnode/AIRTBench/blob/main/README.md)
 [![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark)
 [![Agent Harness](https://img.shields.io/badge/📚_Agent_Harness-Documentation-5714928f.svg)](https://docs.dreadnode.io/strikes/how-to/airtbench-agent)
 
@@ -114,9 +114,8 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 
 ## Dataset
 
-- The dataset is available in the latest GitHub release.
-- Download the dataset directly from the [dataset](./dataset/README.md) directory.
-- Alternative download from [🤗Hugging Face](https://huggingface.co/datasets/TODO)
+- Download the dataset directly from [🤗Hugging Face](https://huggingface.co/datasets/dreadnode/AIRTBench/blob/main/README.md)
+- Instructions for loading the dataset can be found in the [dataset](./dataset/README.md) directory also.
 
 ## Citation
 
