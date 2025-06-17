@@ -9,4 +9,4 @@ RUN pip install \
     lightgbm \
     xgboost \
     kornia \
-    lief \
+    lief
