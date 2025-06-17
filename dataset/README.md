@@ -1,10 +1,31 @@
 # AIRTBench Dataset - External Release
 
+- [AIRTBench Dataset - External Release](#airtbench-dataset---external-release)
+  - [Overview](#overview)
+  - [Dataset Statistics](#dataset-statistics)
+  - [Model Success Rates](#model-success-rates)
+  - [Challenge Difficulty Distribution](#challenge-difficulty-distribution)
+  - [Data Dictionary](#data-dictionary)
+    - [Identifiers](#identifiers)
+    - [Primary Outcomes](#primary-outcomes)
+    - [Performance Metrics](#performance-metrics)
+    - [Resource Usage](#resource-usage)
+    - [Cost Analysis](#cost-analysis)
+    - [Conversation Content](#conversation-content)
+    - [Error Analysis](#error-analysis)
+  - [Usage Examples](#usage-examples)
+    - [Basic Analysis](#basic-analysis)
+    - [Cost Analysis](#cost-analysis-1)
+    - [Performance Analysis](#performance-analysis)
+    - [Conversation Content](#conversation-content-1)
+  - [Contact](#contact)
+  - [Version History](#version-history)
+
 ## Overview
 
-This dataset contains the complete experimental results from the AIRTBench paper: "AIRTBench: An AI Red Teaming Benchmark for Evaluating Language Models' Ability to Autonomously Discover and Exploit AI/ML Security Vulnerabilities."
+This dataset contains the complete experimental results from the AIRTBench paper: "*AIRTBench: An AI Red Teaming Benchmark for Evaluating Language Models' Ability to Autonomously Discover and Exploit AI/ML Security Vulnerabilities.*"
 
-The dataset includes 8,066 experimental runs across 12 different language models and 70 security challenges.
+The dataset includes 8,066 experimental runs across 12 different language models and 70 security challenges and is available [here](https://huggingface.co/datasets/dreadnode/AIRTBench/).
 
 ## Dataset Statistics
 
