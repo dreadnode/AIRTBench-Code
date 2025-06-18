@@ -20,7 +20,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/dreadnode/AIRTBench-Code)](https://github.com/dreadnode/AIRTBench-Code/releases)
 
-[![arXiv](https://img.shields.io/badge/arXiv-TODO-b31b1b.svg)](https://arxiv.org/abs/TODO)
+[![arXiv](https://img.shields.io/badge/arXiv-AIRTBench-b31b1b.svg)](https://arxiv.org/abs/2506.14682)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/dreadnode/AIRTBench/blob/main/README.md)
 [![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark)
 [![Agent Harness](https://img.shields.io/badge/📚_Agent_Harness-Documentation-5714928f.svg)](https://docs.dreadnode.io/strikes/how-to/airtbench-agent)
@@ -33,7 +33,7 @@
 
 ---
 
-This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/TODO) and accompanying blog post, "[Do LLM Agents Have AI Red Team Capabilities? We Built a Benchmark to Find Out](https://dreadnode.io/blog/ai-red-team-benchmark)".
+This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/2506.14682) and accompanying blog post, "[Do LLM Agents Have AI Red Team Capabilities? We Built a Benchmark to Find Out](https://dreadnode.io/blog/ai-red-team-benchmark)".
 
 The AIRTBench agent is designed to evaluate the autonomous red teaming capabilities of large language models (LLMs) through AI/ML Capture The Flag (CTF) challenges. Our agent systematically exploits LLM-based targets by solving challenges on the Dreadnode Strikes platform, providing a standardized benchmark for measuring adversarial AI capabilities.
 
@@ -109,7 +109,7 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 
 ## Resources
 
-- [📄 Paper on arXiv](https://arxiv.org/abs/TODO)
+- [📄 Paper on arXiv](https://arxiv.org/abs/2506.14682)
 - [📝 Blog post](https://dreadnode.io/blog/ai-red-team-benchmark)
 
 ## Dataset
@@ -122,12 +122,14 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 If you find our work helpful, please use the following citations.
 
 ```bibtex
-@misc{TODO,
-  title = {AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models},
-  author = {TODO},
-  year = {2025},
-  eprint = {arXiv:TODO},
-  url = {https://arxiv.org/abs/TODO}
+@misc{dawson2025airtbenchmeasuringautonomousai,
+      title={AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models},
+      author={Ads Dawson and Rob Mulla and Nick Landers and Shane Caldwell},
+      year={2025},
+      eprint={2506.14682},
+      archivePrefix={arXiv},
+      primaryClass={cs.CR},
+      url={https://arxiv.org/abs/2506.14682},
 }
 ```
 
