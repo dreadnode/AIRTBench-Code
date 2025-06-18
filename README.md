@@ -48,6 +48,9 @@ The AIRTBench agent is designed to evaluate the autonomous red teaming capabilit
   - [Dataset](#dataset)
   - [Citation](#citation)
   - [Model requests](#model-requests)
+  - [🤝 Contributing](#-contributing)
+  - [🔐 Security](#-security)
+  - [⭐ Star History](#-star-history)
 
 ## Agent Harness Construction
 
@@ -136,3 +139,19 @@ If you find our work helpful, please use the following citations.
 ## Model requests
 
 If you know of a model that may be interesting to analyze, but do not have the resources to run it yourself, feel free to open a feature request via a GitHub issue.
+
+## 🤝 Contributing
+
+Forks and contributions are welcome! Please see our [Contributing Guide](docs/contributing.md).
+
+## 🔐 Security
+
+See our [Security Policy](SECURITY.md) for reporting vulnerabilities.
+
+## ⭐ Star History
+
+[![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
+
+By watching the repo, you can also be notified of any upcoming releases.
+
+[![Star history graph](https://api.star-history.com/svg?repos=dreadnode/AIRTBench-Code&type=Date)](https://star-history.com/#dreadnode/AIRTBench-Code&Date)
