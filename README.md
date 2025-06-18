@@ -22,7 +22,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-AIRTBench-b31b1b.svg)](https://arxiv.org/abs/2506.14682)
 [![HuggingFace](https://img.shields.io/badge/🤗%20HuggingFace-Dataset-ffca28.svg)](https://huggingface.co/datasets/dreadnode/AIRTBench/blob/main/README.md)
-[![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark)
+[![Dreadnode](https://img.shields.io/badge/Dreadnode-Blog-5714928f.svg)](https://dreadnode.io/blog/ai-red-team-benchmark-)
 [![Agent Harness](https://img.shields.io/badge/📚_Agent_Harness-Documentation-5714928f.svg)](https://docs.dreadnode.io/strikes/how-to/airtbench-agent)
 
 [![GitHub stars](https://img.shields.io/github/stars/dreadnode/AIRTBench-Code?style=social)](https://github.com/dreadnode/AIRTBench-Code/stargazers)
@@ -33,7 +33,7 @@
 
 ---
 
-This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/2506.14682) and accompanying blog post, "[Do LLM Agents Have AI Red Team Capabilities? We Built a Benchmark to Find Out](https://dreadnode.io/blog/ai-red-team-benchmark)".
+This repository contains the implementation of the AIRTBench autonomous AI red teaming agent, complementing our research paper [AIRTBench: Measuring Autonomous AI Red Teaming Capabilities in Language Models](https://arxiv.org/abs/2506.14682) and accompanying blog post, "[Do LLM Agents Have AI Red Team Capabilities? We Built a Benchmark to Find Out](https://dreadnode.io/blog/ai-red-team-benchmark-)".
 
 The AIRTBench agent is designed to evaluate the autonomous red teaming capabilities of large language models (LLMs) through AI/ML Capture The Flag (CTF) challenges. Our agent systematically exploits LLM-based targets by solving challenges on the Dreadnode Strikes platform, providing a standardized benchmark for measuring adversarial AI capabilities.
 
@@ -110,7 +110,7 @@ Check out [the challenge manifest](./airtbench/challenges/.challenges.yaml) to s
 ## Resources
 
 - [📄 Paper on arXiv](https://arxiv.org/abs/2506.14682)
-- [📝 Blog post](https://dreadnode.io/blog/ai-red-team-benchmark)
+- [📝 Blog post](https://dreadnode.io/blog/ai-red-team-benchmark-)
 
 ## Dataset
 
