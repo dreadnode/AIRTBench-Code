@@ -399,46 +399,7 @@ class PythonKernel:
         exc_val: BaseException | None,
         exc_tb: types.TracebackType | None,
     ) -> None:
-        if self._kernel_id is not None:
-            try:
-                logger.debug("Shutting down kernel")
-                try:
-                    await self._post(f"api/kernels/{self._kernel_id}/shutdown")
-                except Exception as e:
-                    logger.warning(f"Failed to gracefully shutdown kernel via API:  {e}")
-                self._kernel_id = None
-            except Exception:
-                logger.exception("Failed to shutdown kernel")
-
-        if self._container is not None and self.cleanup:
-            try:
-                logger.debug(f"Stopping container {self._container.id[:12]}")
-                await self._container.stop(t=5)
-
-                logger.debug(f"Removing container {self._container.id[:12]}")
-                await self._container.delete(force=self.force_remove)
-                self._container = None
-
-                # Log success
-                logger.debug("Container successfully removed")
-            except Exception as e:
-                logger.exception(f"Failed to stop/remove container: {e}")
-
-        if self._client is not None:
-            try:
-                logger.debug("Closing Docker client")
-                await self._client.close()
-                self._client = None
-            except Exception:
-                logger.exception("Failed to close Docker client")
-
-        if self._temp_dir is not None:
-            try:
-                logger.debug(f"Cleaning up temporary directory {self._temp_dir}")
-                shutil.rmtree(self._temp_dir)
-                self._temp_dir = None
-            except Exception:
-                logger.exception("Failed to clean up temporary directory")
+        await self.shutdown()
 
     async def get_container_logs(self) -> str:
         """Get the logs of the container."""
@@ -687,7 +648,7 @@ class PythonKernel:
             response.raise_for_status()
             kernel_info = await response.json()
 
-        return t.cast(KernelState, kernel_info["execution_state"])
+        return t.cast("KernelState", kernel_info["execution_state"])
 
     async def busy(self) -> bool:
         """Check if the kernel is busy executing code."""
@@ -724,3 +685,23 @@ class PythonKernel:
             response.raise_for_status()
 
         logger.debug(f"Kernel {self._kernel_id} restarted")
+
+
+async def cleanup_routine() -> None:
+    """Perform cleanup of Docker resources."""
+    try:
+        client = aiodocker.Docker()
+        # Clean up any dangling containers
+        containers = await client.containers.list(all=True)
+        for container in containers:
+            container_info = await container.show()
+            if container_info.get("State", {}).get("Status") == "exited":
+                try:
+                    await container.delete(force=True)
+                    logger.debug(f"Cleaned up exited container {container_info['Id'][:12]}")
+                except Exception as e:
+                    logger.debug(f"Could not clean up container: {e}")
+        await client.close()
+        logger.debug("Cleanup routine completed")
+    except Exception as e:
+        logger.warning(f"Cleanup routine failed: {e}")
