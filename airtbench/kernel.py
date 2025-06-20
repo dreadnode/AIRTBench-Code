@@ -399,51 +399,7 @@ class PythonKernel:
         exc_val: BaseException | None,
         exc_tb: types.TracebackType | None,
     ) -> None:
-        if self._kernel_id is not None:
-            try:
-                logger.debug("Shutting down kernel")
-                try:
-                    async with aiohttp.ClientSession() as session:
-                        async with session.post(
-                            f"{self._base_url}/api/kernels/{self._kernel_id}/shutdown",
-                            params={"token": self._token},
-                        ) as response:
-                            response.raise_for_status()
-                except Exception as e:
-                    logger.warning(f"Failed to gracefully shutdown kernel via API: {e}")
-                self._kernel_id = None
-            except Exception:
-                logger.exception("Failed to shutdown kernel")
-
-        if self._container is not None and self.cleanup:
-            try:
-                logger.debug(f"Stopping container {self._container.id[:12]}")
-                await self._container.stop(t=5)
-
-                logger.debug(f"Removing container {self._container.id[:12]}")
-                await self._container.delete(force=self.force_remove)
-                self._container = None
-
-                # Log success
-                logger.debug("Container successfully removed")
-            except Exception as e:
-                logger.exception(f"Failed to stop/remove container: {e}")
-
-        if self._client is not None:
-            try:
-                logger.debug("Closing Docker client")
-                await self._client.close()
-                self._client = None
-            except Exception:
-                logger.exception("Failed to close Docker client")
-
-        if self._temp_dir is not None:
-            try:
-                logger.debug(f"Cleaning up temporary directory {self._temp_dir}")
-                shutil.rmtree(self._temp_dir)
-                self._temp_dir = None
-            except Exception:
-                logger.exception("Failed to clean up temporary directory")
+        await self.shutdown()
 
     async def get_container_logs(self) -> str:
         """Get the logs of the container."""
