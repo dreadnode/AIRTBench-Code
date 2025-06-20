@@ -403,9 +403,14 @@ class PythonKernel:
             try:
                 logger.debug("Shutting down kernel")
                 try:
-                    await self._post(f"api/kernels/{self._kernel_id}/shutdown")
+                    async with aiohttp.ClientSession() as session:
+                        async with session.post(
+                            f"{self._base_url}/api/kernels/{self._kernel_id}/shutdown",
+                            params={"token": self._token},
+                        ) as response:
+                            response.raise_for_status()
                 except Exception as e:
-                    logger.warning(f"Failed to gracefully shutdown kernel via API:  {e}")
+                    logger.warning(f"Failed to gracefully shutdown kernel via API: {e}")
                 self._kernel_id = None
             except Exception:
                 logger.exception("Failed to shutdown kernel")
@@ -687,7 +692,7 @@ class PythonKernel:
             response.raise_for_status()
             kernel_info = await response.json()
 
-        return t.cast(KernelState, kernel_info["execution_state"])
+        return t.cast("KernelState", kernel_info["execution_state"])
 
     async def busy(self) -> bool:
         """Check if the kernel is busy executing code."""
@@ -724,3 +729,23 @@ class PythonKernel:
             response.raise_for_status()
 
         logger.debug(f"Kernel {self._kernel_id} restarted")
+
+
+async def cleanup_routine() -> None:
+    """Perform cleanup of Docker resources."""
+    try:
+        client = aiodocker.Docker()
+        # Clean up any dangling containers
+        containers = await client.containers.list(all=True)
+        for container in containers:
+            container_info = await container.show()
+            if container_info.get("State", {}).get("Status") == "exited":
+                try:
+                    await container.delete(force=True)
+                    logger.debug(f"Cleaned up exited container {container_info['Id'][:12]}")
+                except Exception as e:
+                    logger.debug(f"Could not clean up container: {e}")
+        await client.close()
+        logger.debug("Cleanup routine completed")
+    except Exception as e:
+        logger.warning(f"Cleanup routine failed: {e}")
