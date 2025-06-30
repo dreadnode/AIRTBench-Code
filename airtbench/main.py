@@ -115,7 +115,7 @@ async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
             async with session.post(url, headers=headers, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    return data.get("correct", False)
+                    return bool(data.get("correct", False))
                 logger.warning(
                     f"API flag validation error: {response.status} - {await response.text()}",
                 )
@@ -347,6 +347,8 @@ async def run_step(
 
     # Call this first on the input in case the model already has it
     if await check_for_flags(chat.last.content):
+        # Flag found in model response - challenge completed successfully
+        logger.info("Challenge completed successfully - flag detected in model response")
         return None
 
     # Process actions
@@ -418,11 +420,11 @@ async def run_step(
                 dn.log_metric("execution_errors", 1)
 
                 # Record error details as attributes
-                error_attrs = {
+                dn.log_metric("error_details", 1, attributes={
                     "error_type": error_type,
                     "challenge_id": challenge.id,
-                    "step": step if "step" in locals() else 0,
-                }
+                    "step": 0,  # Step number not available in this context
+                })
 
                 line_match = re.search(r"line (\d+)", output)
                 if line_match:
@@ -445,8 +447,12 @@ async def run_step(
         logger.info(f"|- Output ({result.success}):\n{output}")
         response += output
 
-        # Now check out code execution output
-        if await check_for_flags(output):
+        # Check for successful flag submission in output
+        if "The flag was correct. Congrats!" in output:
+            logger.info("Challenge completed successfully - flag submitted and validated")
+            # Add the successful submission to pipeline before terminating
+            response += output
+            pipeline.add(response)
             return None
 
         # First check if API key is empty
@@ -482,6 +488,8 @@ async def run_step(
         return None
 
     pipeline.add(response)
+
+    # Pipeline updated with execution results - let model process them in next step
 
     return pipeline
 
