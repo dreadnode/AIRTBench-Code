@@ -202,6 +202,8 @@ async def run_step(
     challenge: Challenge,
     pipeline: rg.ChatPipeline,
     kernel: PythonKernel,
+    generator: rg.Generator = None,
+    backoff_wrapper=None,
 ) -> rg.ChatPipeline | None:
     # If we are limiting the model to a single code
     # execution entry per step, we can safely stop
@@ -670,6 +672,8 @@ async def attempt_challenge(
                 challenge,
                 pipeline,
                 kernel,
+                generator,
+                backoff_wrapper,
             )
         else:
             logger.warning("|- Max steps reached")
