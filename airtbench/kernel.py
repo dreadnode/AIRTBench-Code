@@ -276,7 +276,7 @@ class PythonKernel:
             session.get(
                 f"{self.base_url}/api/status",
                 params={"token": self._token},
-                timeout=1,
+                timeout=aiohttp.ClientTimeout(total=1),
             ) as response,
         ):
             response.raise_for_status()

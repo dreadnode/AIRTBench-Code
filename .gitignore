@@ -179,3 +179,4 @@ dataset/
 !failed_flag_submissions.csv
 
 .task
+.envrc

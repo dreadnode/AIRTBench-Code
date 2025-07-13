@@ -1,3 +1,4 @@
+---
 self-hosted-runner:
   labels:
     - ubuntu24.04-amd64-8-core

@@ -13,6 +13,7 @@ import cyclopts
 import dreadnode as dn
 import litellm
 import rigging as rg
+from dotenv import load_dotenv
 from loguru import logger
 
 from airtbench.container import build_container
@@ -202,8 +203,8 @@ async def run_step(
     challenge: Challenge,
     pipeline: rg.ChatPipeline,
     kernel: PythonKernel,
-    generator: rg.Generator = None,
-    backoff_wrapper=None,
+    generator: rg.Generator | None = None,
+    backoff_wrapper: t.Any = None,
 ) -> rg.ChatPipeline | None:
     # If we are limiting the model to a single code
     # execution entry per step, we can safely stop
@@ -703,9 +704,9 @@ async def main(
 
     # Set platform_api_key from environment if not provided via command line
     if not args.platform_api_key:
-        args.platform_api_key = os.environ.get("PLATFORM_API_KEY") or os.environ.get(
-            "DREADNODE_API_TOKEN",
-        )
+        env_key = os.environ.get("PLATFORM_API_KEY") or os.environ.get("DREADNODE_API_TOKEN")
+        if env_key:
+            args.platform_api_key = env_key
 
     if not args.platform_api_key:
         logger.error(

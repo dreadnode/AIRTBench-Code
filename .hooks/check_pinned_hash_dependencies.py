@@ -2,7 +2,6 @@
 import re
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 
 class GitHubActionChecker:
@@ -12,7 +11,7 @@ class GitHubActionChecker:
 
         # Pattern for actions with version tags (unpinned)
         self.unpinned_pattern = re.compile(
-            r"uses:\s+([^@\s]+)@(v\d+(?:\.\d+)*(?:-[a-zA-Z0-9]+(?:\.\d+)*)?)"
+            r"uses:\s+([^@\s]+)@(v\d+(?:\.\d+)*(?:-[a-zA-Z0-9]+(?:\.\d+)*)?)",
         )
 
         # Pattern for all uses statements
@@ -30,7 +29,7 @@ class GitHubActionChecker:
         """
         return f"{file_path}:{line_number}"
 
-    def get_line_numbers(self, content: str, pattern: re.Pattern) -> List[Tuple[str, int]]:
+    def get_line_numbers(self, content: str, pattern: re.Pattern) -> list[tuple[str, int]]:
         """Find matches with their line numbers."""
         matches = []
         for i, line in enumerate(content.splitlines(), 1):
@@ -88,7 +87,7 @@ class GitHubActionChecker:
             print("\033[91m[!] Completely unpinned (no SHA or version):\033[0m")
             for match, line_num in unpinned_without_hash:
                 print(
-                    f" |- {match} \033[90m({self.format_terminal_link(file_path, line_num)})\033[0m"
+                    f" |- {match} \033[90m({self.format_terminal_link(file_path, line_num)})\033[0m",
                 )
 
         # Print summary
