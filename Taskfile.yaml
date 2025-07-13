@@ -28,11 +28,14 @@ tasks:
     internal: true
     cmds:
       - task: check-command
-        vars: { COMMAND: docker }
+        vars:
+          CLI_ARGS: docker
       - task: check-command
-        vars: { COMMAND: python3 }
+        vars:
+          CLI_ARGS: python3
       - task: check-command
-        vars: { COMMAND: ruby }
+        vars:
+          CLI_ARGS: ruby
 
   setup-env:
     internal: true
@@ -61,8 +64,9 @@ tasks:
       - |
         #!/bin/bash
         set -e
+        mkdir -p .git/hooks
         ln -sf .hooks/post_merge.sh .git/hooks/post-merge
-        chmod +x .git/hooks/post-merge
+        chmod +x .hooks/post_merge.sh
         echo "Post-merge git hooks successfully installed!"
 
   init:
@@ -71,8 +75,8 @@ tasks:
     cmds:
       - task: setup-env
       - task: setup-git-hooks
-      - poetry install
-      - task: pre-commit:install
+      - uv sync
+      - task: pre-commit:install-pc-hooks
       - echo "Project is ready to go! 🚀"
 
   # Tools and pre-commit tasks
@@ -93,36 +97,31 @@ tasks:
         find . -type f -name "*.pyd" -delete
         rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/ build/ dist/ ./*.egg-info/
 
-  # Poetry and API tasks
-  poetry:
-    desc: Run poetry in the API directory
+  # UV and API tasks
+  uv:
+    desc: Run uv in the API directory
     vars:
       ARGS: '{{.CLI_ARGS}}'
     cmds:
-      - task: deactivate
-      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && poetry {{.ARGS}}
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv run {{.ARGS}}
 
   mypy:
     desc: Run type checking with mypy
     cmds:
-      - task: poetry
-        vars: { ARGS: "run mypy ." }
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv run mypy .
 
   ruff:
     desc: Run linting and formatting with ruff
     cmds:
-      - task: poetry
-        vars: { ARGS: "run ruff check ." }
-      - task: poetry
-        vars: { ARGS: "run ruff format ." }
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv run ruff check .
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv run ruff format .
 
   pytest:
     desc: Run tests with pytest and coverage reporting
     vars:
-      ARGS: '{{default "--cov=. --cov-report=term-missing tests/" .CLI_ARGS}}'
+      ARGS: '{{default "--cov=. --cov-report=term-missing" .CLI_ARGS}}'
     cmds:
-      - task: poetry
-        vars: { ARGS: "run pytest {{.ARGS}}" }
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv run pytest {{.ARGS}}
 
   # GitHub tasks
   create-release:

@@ -177,3 +177,5 @@ dataset/
 *.json
 *.csv
 !failed_flag_submissions.csv
+
+.task
