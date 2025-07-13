@@ -12,7 +12,7 @@ import subprocess
 import typing as t
 
 import rigging as rg
-import typer  # type: ignore [import-untyped]
+import typer  # type: ignore [import-not-found, misc]
 
 TRUNCATION_WARNING = (
     "\n---\n**Note**: Due to the large size of this diff, some content has been truncated."
