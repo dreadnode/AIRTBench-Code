@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import docker
+import docker  # type: ignore [import-untyped]
 import rich
 from loguru import logger
 

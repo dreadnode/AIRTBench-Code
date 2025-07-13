@@ -251,7 +251,7 @@ async def run_step(
             return None
 
         # Handle caching-related errors by disabling cache and retrying
-        if "cache_control" in str(chat.error) and args.enable_cache:
+        if "cache_control" in str(chat.error) and args.enable_cache and generator is not None:
             logger.warning(
                 f"|- Caching not supported by provider, disabling cache and retrying: {chat.error}",
             )
