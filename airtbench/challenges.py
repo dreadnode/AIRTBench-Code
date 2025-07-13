@@ -1,6 +1,6 @@
 import pathlib
 
-import yaml  # type: ignore [import-untyped]
+import yaml
 from pydantic import BaseModel
 
 current_dir = pathlib.Path(__file__).parent
