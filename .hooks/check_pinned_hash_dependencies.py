@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 class GitHubActionChecker:
-    def __init__(self):
+    def __init__(self) -> None:
         # Pattern for actions with SHA-1 hashes (pinned)
         self.pinned_pattern = re.compile(r"uses:\s+([^@\s]+)@([a-f0-9]{40})")
 
@@ -29,7 +29,7 @@ class GitHubActionChecker:
         """
         return f"{file_path}:{line_number}"
 
-    def get_line_numbers(self, content: str, pattern: re.Pattern) -> list[tuple[str, int]]:
+    def get_line_numbers(self, content: str, pattern: re.Pattern[str]) -> list[tuple[str, int]]:
         """Find matches with their line numbers."""
         matches = []
         for i, line in enumerate(content.splitlines(), 1):
@@ -104,7 +104,7 @@ class GitHubActionChecker:
         return not has_errors
 
 
-def main():
+def main() -> None:
     checker = GitHubActionChecker()
     files_to_check = sys.argv[1:]
 
