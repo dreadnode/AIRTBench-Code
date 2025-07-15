@@ -13,7 +13,12 @@ def build_container(
     force_rebuild: bool = False,
     memory_limit: str = "4g",
 ) -> str:
-    docker_client = docker.DockerClient()
+    try:
+        docker_client = docker.DockerClient()
+    except docker.errors.DockerException as e:
+        raise RuntimeError(
+            "Docker connection failed: Docker is not running or not accessible",
+        ) from e
 
     docker_file = Path(docker_file)
     if not docker_file.exists():
