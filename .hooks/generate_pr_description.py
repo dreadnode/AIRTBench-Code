@@ -43,8 +43,8 @@ def get_diff(base_ref: str, source_ref: str, *, exclude: list[str] | None = None
     Get the git diff between two branches.
     """
 
-    merge_base = subprocess.run(
-        ["git", "merge-base", source_ref, base_ref],
+    merge_base = subprocess.run(  # noqa: S603
+        ["git", "merge-base", source_ref, base_ref],  # noqa: S607
         capture_output=True,
         text=True,
         check=True,
@@ -54,14 +54,12 @@ def get_diff(base_ref: str, source_ref: str, *, exclude: list[str] | None = None
     if exclude:
         diff_command.extend(["--", ".", *[f":(exclude){path}" for path in exclude]])
 
-    diff_text = subprocess.run(
+    return subprocess.run(  # noqa: S603
         diff_command,
         capture_output=True,
         text=True,
         check=True,
     ).stdout
-
-    return diff_text
 
 
 def main(

@@ -17,12 +17,15 @@ from dotenv import load_dotenv
 from loguru import logger
 
 from airtbench.container import build_container
-from airtbench.kernel import Notebook, PythonKernel
+from airtbench.kernel import Notebook, PythonKernel, cleanup_routine
 from airtbench.util import enforce_concurrency
 
 from .challenges import Challenge, load_challenges
 
 # Constants
+HTTP_OK = 200
+HTTP_NOT_FOUND = 404
+CLEANUP_INTERVAL = 5
 
 g_current_dir = Path(__file__).parent
 g_challenge_dir = g_current_dir / "challenges"
@@ -114,14 +117,14 @@ async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
             payload = {"challenge": challenge_id, "flag": flag}
 
             async with session.post(url, headers=headers, json=payload) as response:
-                if response.status == 200:
+                if response.status == HTTP_OK:
                     data = await response.json()
                     return bool(data.get("correct", False))
                 logger.warning(
                     f"API flag validation error: {response.status} - {await response.text()}",
                 )
                 return False
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Error during API flag validation: {e}")
         return False
 
@@ -156,7 +159,7 @@ async def validate_api_key(api_key: str) -> bool:
                 logger.info(f"API key validated successfully (status {response.status})")
                 return True
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"API key validation error: {e}")
         return False
 
@@ -176,7 +179,7 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
 
             async with session.post(url, headers=headers, json=payload) as response:
                 # 404 means challenge doesn't exist
-                if response.status == 404:
+                if response.status == HTTP_NOT_FOUND:
                     logger.warning(f"Challenge '{challenge_id}' not available")
                     return False
 
@@ -189,7 +192,7 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
                 logger.info(f"Challenge {challenge_id} is available (status {response.status})")
                 return True
 
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.error(f"Error checking challenge {challenge_id} availability: {e}")
         return False
 
@@ -198,7 +201,7 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
 
 
 @dn.task(name="Step")
-async def run_step(
+async def run_step(  # noqa: PLR0913, PLR0911, PLR0912, PLR0915
     args: AIRTBenchArgs,
     challenge: Challenge,
     pipeline: rg.ChatPipeline,
@@ -258,7 +261,7 @@ async def run_step(
             dn.log_metric("cache_unsupported", 1)
             # Create new pipeline without caching
             retry_pipeline = (
-                generator.wrap(backoff_wrapper).chat(pipeline.chat.messages).cache(False)
+                generator.wrap(backoff_wrapper).chat(pipeline.chat.messages).cache(False)  # noqa: FBT003
             )
             try:
                 retry_chat = await retry_pipeline.catch(
@@ -272,7 +275,7 @@ async def run_step(
                 if not retry_chat.failed:
                     logger.info("|- Successfully retried without cache")
                     return retry_pipeline
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning(f"|- Retry without cache also failed: {e}")
 
         logger.warning(f"|- Chat failed: {chat.error}")
@@ -660,13 +663,11 @@ async def attempt_challenge(
         for step in range(1, args.max_steps + 1):
             # Run cleanup every 5 steps
             cleanup_counter += 1
-            if cleanup_counter >= 5:
+            if cleanup_counter >= CLEANUP_INTERVAL:
                 cleanup_counter = 0
                 try:
-                    from .kernel import cleanup_routine
-
                     await cleanup_routine()
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.warning(f"Cleanup routine failed: {e}")
 
             if pipeline is None:
@@ -736,7 +737,6 @@ async def main(
         "airtbench",
         g_container_dir / "Dockerfile",
         g_container_dir,
-        memory_limit=args.memory_limit,
     )
 
     challenges = load_challenges()

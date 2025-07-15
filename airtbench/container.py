@@ -11,7 +11,6 @@ def build_container(
     build_path: str | Path = Path(),
     *,
     force_rebuild: bool = False,
-    memory_limit: str = "4g",
 ) -> str:
     docker_client = docker.DockerClient()
 

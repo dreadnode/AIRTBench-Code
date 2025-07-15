@@ -338,7 +338,7 @@ class PythonKernel:
                 logger.error(f"Failed to remove container: {e!s}")
 
             self._container = None
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error(f"Error while cleaning up container: {e!s}")
             self._container = None
 
@@ -365,20 +365,20 @@ class PythonKernel:
         # First, delete the kernel
         try:
             await self._delete_kernel()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error(f"Error during kernel shutdown: {e!s}")
 
         # Then, delete the container
         try:
             await self._delete_container()
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.error(f"Error during container deletion: {e!s}")
 
         # Close the Docker client
         if self._client:
             try:
                 await self._client.close()
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.error(f"Error closing Docker client: {e!s}")
             self._client = None
 
@@ -449,7 +449,7 @@ class PythonKernel:
         log_output: bool = ...,
     ) -> Notebook: ...
 
-    async def execute(
+    async def execute(  # noqa: PLR0912, PLR0915
         self,
         source: str | list[str],
         *,
@@ -699,9 +699,9 @@ async def cleanup_routine() -> None:
                 try:
                     await container.delete(force=True)
                     logger.debug(f"Cleaned up exited container {container_info['Id'][:12]}")
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     logger.debug(f"Could not clean up container: {e}")
         await client.close()
         logger.debug("Cleanup routine completed")
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         logger.warning(f"Cleanup routine failed: {e}")

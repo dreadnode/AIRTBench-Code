@@ -31,17 +31,17 @@ class GitHubActionChecker:
 
     def get_line_numbers(self, content: str, pattern: re.Pattern[str]) -> list[tuple[str, int]]:
         """Find matches with their line numbers."""
-        matches = []
-        for i, line in enumerate(content.splitlines(), 1):
-            for match in pattern.finditer(line):
-                matches.append((match.group(0), i))
-        return matches
+        return [
+            (match.group(0), i)
+            for i, line in enumerate(content.splitlines(), 1)
+            for match in pattern.finditer(line)
+        ]
 
     def check_file(self, file_path: str) -> bool:
         """Check a single file for unpinned dependencies."""
         try:
             content = Path(file_path).read_text()
-        except Exception as e:
+        except OSError as e:
             print(f"\033[91mError reading file {file_path}: {e}\033[0m")
             return False
 
