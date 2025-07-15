@@ -23,7 +23,7 @@ AnyDict = dict[str, t.Any]
 KernelState = t.Literal["starting", "idle", "busy"]
 
 
-class NotebookCell(BaseModel):
+class NotebookCell(BaseModel):  # type: ignore[misc]
     """A cell in a Jupyter notebook."""
 
     cell_type: t.Literal["code", "markdown", "raw"]
@@ -38,7 +38,7 @@ class NotebookCell(BaseModel):
         return cls(cell_type="code", source=source, metadata={}, outputs=[], execution_count=None)
 
 
-class Notebook(BaseModel):
+class Notebook(BaseModel):  # type: ignore[misc]
     """A Jupyter notebook."""
 
     cells: list[NotebookCell] = field(default_factory=list)
@@ -54,7 +54,7 @@ class Notebook(BaseModel):
     @classmethod
     def load(cls, path: Path | str) -> "Notebook":
         """Load a notebook from a file."""
-        return cls.model_validate_json(Path(path).read_text())
+        return cls.model_validate_json(Path(path).read_text())  # type: ignore[no-any-return]
 
     def save(self, path: Path | str) -> None:
         """Save a notebook to a file."""
@@ -92,7 +92,7 @@ class Notebook(BaseModel):
         return "".join(markdown_chunks).strip()
 
 
-class KernelExecution(BaseModel):
+class KernelExecution(BaseModel):  # type: ignore[misc]
     """Result of executing code in a kernel."""
 
     source: str
@@ -449,88 +449,6 @@ class PythonKernel:
         log_output: bool = ...,
     ) -> Notebook: ...
 
-    def _create_execute_request(self, source: str) -> dict:
-        """Create an execute request message."""
-        msg_id = str(uuid.uuid4())
-        return {
-            "header": {
-                "msg_id": msg_id,
-                "username": "user",
-                "session": str(uuid.uuid4()),
-                "msg_type": "execute_request",
-                "version": "5.0",
-            },
-            "parent_header": {},
-            "metadata": {},
-            "content": {
-                "code": source,
-                "silent": False,
-                "store_history": True,
-                "user_expressions": {},
-                "allow_stdin": False,
-            },
-        }
-
-    def _handle_execute_result(self, content: dict, *, log_output: bool) -> dict:
-        """Handle execute_result message."""
-        result_output = {
-            "output_type": "execute_result",
-            "metadata": content.get("metadata", {}),
-            "data": content.get("data", {}),
-            "execution_count": content.get("execution_count"),
-        }
-        if log_output:
-            logger.info(content.get("data", {}).get("text/plain", ""))
-        return result_output
-
-    def _handle_display_data(self, content: dict, *, log_output: bool) -> dict:
-        """Handle display_data message."""
-        display_output = {
-            "output_type": "display_data",
-            "metadata": content.get("metadata", {}),
-            "data": content.get("data", {}),
-        }
-        if log_output:
-            logger.info(content.get("data", {}).get("text/plain", ""))
-        return display_output
-
-    def _handle_stream(self, content: dict, outputs: list, *, log_output: bool) -> None:
-        """Handle stream message."""
-        clean_text = strip_ansi_codes(content.get("text", ""))
-        stream_name = content.get("name", "stdout")
-
-        # Try to append to an existing stream output
-        for i, output in enumerate(outputs):
-            if output["output_type"] == "stream" and output["name"] == stream_name:
-                outputs[i]["text"] += clean_text
-                break
-        else:
-            # Create a new stream output
-            if stream_name not in ("stdout", "stderr"):
-                stream_name = "stdout"
-
-            stream_output = {
-                "output_type": "stream",
-                "name": stream_name,
-                "text": clean_text,
-            }
-            outputs.append(stream_output)
-
-        if log_output:
-            logger.info(clean_text)
-
-    def _handle_error(self, content: dict) -> tuple[dict, str]:
-        """Handle error message."""
-        traceback = content.get("traceback", [])
-        error_output = {
-            "output_type": "error",
-            "ename": content.get("ename", ""),
-            "evalue": content.get("evalue", ""),
-            "traceback": traceback,
-        }
-        error = strip_ansi_codes("\n".join(traceback))
-        return error_output, error
-
     async def execute(  # noqa: PLR0912
         self,
         source: str | list[str],
@@ -608,6 +526,104 @@ class PythonKernel:
                 return execution.to_notebook()
             case _:
                 return execution
+
+    def _create_execute_request(self, source: str) -> dict[str, t.Any]:
+        """Create an execute request message."""
+        msg_id = str(uuid.uuid4())
+        return {
+            "header": {
+                "msg_id": msg_id,
+                "username": "user",
+                "session": str(uuid.uuid4()),
+                "msg_type": "execute_request",
+                "version": "5.0",
+            },
+            "parent_header": {},
+            "metadata": {},
+            "content": {
+                "code": source,
+                "silent": False,
+                "store_history": True,
+                "user_expressions": {},
+                "allow_stdin": False,
+            },
+        }
+
+    def _handle_execute_result(
+        self,
+        content: dict[str, t.Any],
+        *,
+        log_output: bool,
+    ) -> dict[str, t.Any]:
+        """Handle execute_result message."""
+        result_output = {
+            "output_type": "execute_result",
+            "metadata": content.get("metadata", {}),
+            "data": content.get("data", {}),
+            "execution_count": content.get("execution_count"),
+        }
+        if log_output:
+            logger.info(content.get("data", {}).get("text/plain", ""))
+        return result_output
+
+    def _handle_display_data(
+        self,
+        content: dict[str, t.Any],
+        *,
+        log_output: bool,
+    ) -> dict[str, t.Any]:
+        """Handle display_data message."""
+        display_output = {
+            "output_type": "display_data",
+            "metadata": content.get("metadata", {}),
+            "data": content.get("data", {}),
+        }
+        if log_output:
+            logger.info(content.get("data", {}).get("text/plain", ""))
+        return display_output
+
+    def _handle_stream(
+        self,
+        content: dict[str, t.Any],
+        outputs: list[t.Any],
+        *,
+        log_output: bool,
+    ) -> None:
+        """Handle stream message."""
+        clean_text = strip_ansi_codes(content.get("text", ""))
+        stream_name = content.get("name", "stdout")
+
+        # Try to append to an existing stream output
+        for i, output in enumerate(outputs):
+            if output["output_type"] == "stream" and output["name"] == stream_name:
+                outputs[i]["text"] += clean_text
+                break
+        else:
+            # Create a new stream output
+            if stream_name not in ("stdout", "stderr"):
+                stream_name = "stdout"
+
+            stream_output = {
+                "output_type": "stream",
+                "name": stream_name,
+                "text": clean_text,
+            }
+            outputs.append(stream_output)
+
+        if log_output:
+            logger.info(clean_text)
+
+    def _handle_error(self, content: dict[str, t.Any]) -> tuple[dict[str, t.Any], str]:
+        """Handle error message."""
+        traceback = content.get("traceback", [])
+        error_output = {
+            "output_type": "error",
+            "ename": content.get("ename", ""),
+            "evalue": content.get("evalue", ""),
+            "traceback": traceback,
+        }
+        error = strip_ansi_codes("\n".join(traceback))
+        return error_output, error
 
     async def execute_cell(self, cell: NotebookCell) -> NotebookCell:
         """Execute a notebook cell."""

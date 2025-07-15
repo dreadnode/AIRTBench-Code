@@ -24,6 +24,20 @@ dependencies = [
 
 [tool.mypy]
 strict = true
+# Allow untyped decorators since many external libraries don't have proper stubs
+disallow_untyped_decorators = false
+# Allow unused type ignores since pre-commit and local mypy might have different environments
+warn_unused_ignores = false
+
+[[tool.mypy.overrides]]
+module = [
+    "pydantic.*",
+    "rigging.*",
+    "dreadnode.*",
+    "tenacity.*",
+    "loguru.*",
+]
+ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100
@@ -48,3 +62,11 @@ ignore = [
 
 [tool.ruff.format]
 skip-magic-trailing-comma = false
+
+[dependency-groups]
+dev = [
+    "types-aiofiles>=24.1.0.20250708",
+    "types-docker>=7.1.0.20250705",
+    "types-pyyaml>=6.0.12.20250516",
+    "types-setuptools>=80.9.0.20250529",
+]

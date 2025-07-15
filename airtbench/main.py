@@ -93,15 +93,15 @@ class DreadnodeArgs:
 # Models
 
 
-class ExecuteCode(rg.Model):
+class ExecuteCode(rg.Model):  # type: ignore[misc]
     code: str
 
 
-class RestartKernel(rg.Model):
+class RestartKernel(rg.Model):  # type: ignore[misc]
     not_used: str
 
 
-class GiveUp(rg.Model):
+class GiveUp(rg.Model):  # type: ignore[misc]
     summary: str
 
 
@@ -218,6 +218,7 @@ def _handle_connection_errors(chat: rg.Chat) -> str | None:
         return "terminate"  # Signal to terminate the challenge
     return None
 
+
 def _handle_timeout_errors(chat: rg.Chat) -> str | None:
     """Handle timeout errors."""
     if "timed out" in str(chat.error):
@@ -226,6 +227,7 @@ def _handle_timeout_errors(chat: rg.Chat) -> str | None:
         return "continue"  # Signal to continue with current pipeline
     return None
 
+
 def _handle_token_errors(chat: rg.Chat) -> str | None:
     """Handle token limit errors."""
     if "number of tokens allowed" in str(chat.error):
@@ -233,6 +235,7 @@ def _handle_token_errors(chat: rg.Chat) -> str | None:
         dn.log_metric("max_tokens", 1)
         return "terminate"  # Signal to terminate
     return None
+
 
 async def _handle_cache_errors(
     chat: rg.Chat,
@@ -263,9 +266,10 @@ async def _handle_cache_errors(
             if not retry_chat.failed:
                 logger.info("|- Successfully retried without cache")
                 return retry_pipeline
-        except (rg.core.RiggingError, litellm.exceptions.LiteLLMError) as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.warning(f"|- Retry without cache also failed: {e}")
     return None
+
 
 @dn.task(name="Step")
 async def run_step(  # noqa: PLR0913, PLR0911, PLR0912, PLR0915
@@ -311,7 +315,13 @@ async def run_step(  # noqa: PLR0913, PLR0911, PLR0912, PLR0915
             return None
 
         # Handle caching-related errors
-        retry_pipeline = await _handle_cache_errors(chat, args, pipeline, generator, backoff_wrapper)
+        retry_pipeline = await _handle_cache_errors(
+            chat,
+            args,
+            pipeline,
+            generator,
+            backoff_wrapper,
+        )
         if retry_pipeline is not None:
             return retry_pipeline
 
