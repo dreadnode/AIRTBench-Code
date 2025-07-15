@@ -338,7 +338,7 @@ class PythonKernel:
                 logger.error(f"Failed to remove container: {e!s}")
 
             self._container = None
-        except Exception as e:  # noqa: BLE001
+        except (aiodocker.exceptions.DockerError, OSError) as e:
             logger.error(f"Error while cleaning up container: {e!s}")
             self._container = None
 
@@ -365,20 +365,20 @@ class PythonKernel:
         # First, delete the kernel
         try:
             await self._delete_kernel()
-        except Exception as e:  # noqa: BLE001
+        except (aiodocker.exceptions.DockerError, OSError, ConnectionError) as e:
             logger.error(f"Error during kernel shutdown: {e!s}")
 
         # Then, delete the container
         try:
             await self._delete_container()
-        except Exception as e:  # noqa: BLE001
+        except (aiodocker.exceptions.DockerError, OSError) as e:
             logger.error(f"Error during container deletion: {e!s}")
 
         # Close the Docker client
         if self._client:
             try:
                 await self._client.close()
-            except Exception as e:  # noqa: BLE001
+            except (aiodocker.exceptions.DockerError, OSError, ConnectionError) as e:
                 logger.error(f"Error closing Docker client: {e!s}")
             self._client = None
 
@@ -449,18 +449,10 @@ class PythonKernel:
         log_output: bool = ...,
     ) -> Notebook: ...
 
-    async def execute(  # noqa: PLR0912, PLR0915
-        self,
-        source: str | list[str],
-        *,
-        format: t.Literal["str", "cell", "notebook"] | None = None,
-        timeout: int = 30,
-        log_output: bool = False,
-    ) -> KernelExecution | Notebook | NotebookCell | str:
-        """Execute code in the kernel."""
+    def _create_execute_request(self, source: str) -> dict:
+        """Create an execute request message."""
         msg_id = str(uuid.uuid4())
-        source = "".join(source) if isinstance(source, list) else source
-        execute_request = {
+        return {
             "header": {
                 "msg_id": msg_id,
                 "username": "user",
@@ -478,6 +470,79 @@ class PythonKernel:
                 "allow_stdin": False,
             },
         }
+
+    def _handle_execute_result(self, content: dict, *, log_output: bool) -> dict:
+        """Handle execute_result message."""
+        result_output = {
+            "output_type": "execute_result",
+            "metadata": content.get("metadata", {}),
+            "data": content.get("data", {}),
+            "execution_count": content.get("execution_count"),
+        }
+        if log_output:
+            logger.info(content.get("data", {}).get("text/plain", ""))
+        return result_output
+
+    def _handle_display_data(self, content: dict, *, log_output: bool) -> dict:
+        """Handle display_data message."""
+        display_output = {
+            "output_type": "display_data",
+            "metadata": content.get("metadata", {}),
+            "data": content.get("data", {}),
+        }
+        if log_output:
+            logger.info(content.get("data", {}).get("text/plain", ""))
+        return display_output
+
+    def _handle_stream(self, content: dict, outputs: list, *, log_output: bool) -> None:
+        """Handle stream message."""
+        clean_text = strip_ansi_codes(content.get("text", ""))
+        stream_name = content.get("name", "stdout")
+
+        # Try to append to an existing stream output
+        for i, output in enumerate(outputs):
+            if output["output_type"] == "stream" and output["name"] == stream_name:
+                outputs[i]["text"] += clean_text
+                break
+        else:
+            # Create a new stream output
+            if stream_name not in ("stdout", "stderr"):
+                stream_name = "stdout"
+
+            stream_output = {
+                "output_type": "stream",
+                "name": stream_name,
+                "text": clean_text,
+            }
+            outputs.append(stream_output)
+
+        if log_output:
+            logger.info(clean_text)
+
+    def _handle_error(self, content: dict) -> tuple[dict, str]:
+        """Handle error message."""
+        traceback = content.get("traceback", [])
+        error_output = {
+            "output_type": "error",
+            "ename": content.get("ename", ""),
+            "evalue": content.get("evalue", ""),
+            "traceback": traceback,
+        }
+        error = strip_ansi_codes("\n".join(traceback))
+        return error_output, error
+
+    async def execute(  # noqa: PLR0912
+        self,
+        source: str | list[str],
+        *,
+        format: t.Literal["str", "cell", "notebook"] | None = None,
+        timeout: int = 30,
+        log_output: bool = False,
+    ) -> KernelExecution | Notebook | NotebookCell | str:
+        """Execute code in the kernel."""
+        source = "".join(source) if isinstance(source, list) else source
+        execute_request = self._create_execute_request(source)
+        msg_id = execute_request["header"]["msg_id"]
 
         outputs: list[AnyDict] = []
         error: str | None = None
@@ -502,63 +567,20 @@ class PythonKernel:
                 content = msg.get("content", {})
 
                 if msg_type == "execute_result":
-                    result_output = {
-                        "output_type": "execute_result",
-                        "metadata": content.get("metadata", {}),
-                        "data": content.get("data", {}),
-                        "execution_count": content.get("execution_count"),
-                    }
+                    result_output = self._handle_execute_result(content, log_output=log_output)
                     outputs.append(result_output)
                     execution_count = content.get("execution_count")
 
-                    if log_output:
-                        logger.info(content.get("data", {}).get("text/plain", ""))
-
                 elif msg_type == "display_data":
-                    display_output = {
-                        "output_type": "display_data",
-                        "metadata": content.get("metadata", {}),
-                        "data": content.get("data", {}),
-                    }
+                    display_output = self._handle_display_data(content, log_output=log_output)
                     outputs.append(display_output)
 
-                    if log_output:
-                        logger.info(content.get("data", {}).get("text/plain", ""))
-
                 elif msg_type == "stream":
-                    clean_text = strip_ansi_codes(content.get("text", ""))
-                    stream_name = content.get("name", "stdout")
-
-                    # Try to append to an existing stream output
-                    for i, output in enumerate(outputs):
-                        if output["output_type"] == "stream" and output["name"] == stream_name:
-                            outputs[i]["text"] += clean_text
-                            break
-                    else:
-                        # Create a new stream output
-                        if stream_name not in ("stdout", "stderr"):
-                            stream_name = "stdout"
-
-                        stream_output = {
-                            "output_type": "stream",
-                            "name": stream_name,
-                            "text": clean_text,
-                        }
-                        outputs.append(stream_output)
-
-                    if log_output:
-                        logger.info(clean_text)
+                    self._handle_stream(content, outputs, log_output=log_output)
 
                 elif msg_type == "error":
-                    traceback = content.get("traceback", [])
-                    error_output = {
-                        "output_type": "error",
-                        "ename": content.get("ename", ""),
-                        "evalue": content.get("evalue", ""),
-                        "traceback": traceback,
-                    }
+                    error_output, error = self._handle_error(content)
                     outputs.append(error_output)
-                    error = strip_ansi_codes("\n".join(traceback))
 
                 elif msg_type == "execute_reply":
                     # In case we didn't receive an error message
@@ -699,9 +721,9 @@ async def cleanup_routine() -> None:
                 try:
                     await container.delete(force=True)
                     logger.debug(f"Cleaned up exited container {container_info['Id'][:12]}")
-                except Exception as e:  # noqa: BLE001
+                except (aiodocker.exceptions.DockerError, OSError) as e:
                     logger.debug(f"Could not clean up container: {e}")
         await client.close()
         logger.debug("Cleanup routine completed")
-    except Exception as e:  # noqa: BLE001
+    except (aiodocker.exceptions.DockerError, OSError, ConnectionError) as e:
         logger.warning(f"Cleanup routine failed: {e}")

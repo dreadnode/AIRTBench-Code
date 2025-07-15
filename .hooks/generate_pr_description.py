@@ -8,6 +8,7 @@
 # ///
 
 import asyncio
+import shutil
 import subprocess
 import typing as t
 
@@ -42,19 +43,22 @@ def get_diff(base_ref: str, source_ref: str, *, exclude: list[str] | None = None
     """
     Get the git diff between two branches.
     """
+    git_path = shutil.which("git")
+    if git_path is None:
+        raise RuntimeError("Git executable not found in PATH")
 
-    merge_base = subprocess.run(  # noqa: S603
-        ["git", "merge-base", source_ref, base_ref],  # noqa: S607
+    merge_base = subprocess.run(  # noqa: S603 # Safe: git_path is validated via shutil.which
+        [git_path, "merge-base", source_ref, base_ref],
         capture_output=True,
         text=True,
         check=True,
     ).stdout.strip()
 
-    diff_command = ["git", "diff", "--no-color", merge_base, source_ref]
+    diff_command = [git_path, "diff", "--no-color", merge_base, source_ref]
     if exclude:
         diff_command.extend(["--", ".", *[f":(exclude){path}" for path in exclude]])
 
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(  # noqa: S603 # Safe: git_path is validated via shutil.which
         diff_command,
         capture_output=True,
         text=True,

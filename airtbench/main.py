@@ -6,6 +6,7 @@ import typing as t
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import aiodocker.exceptions
 import aiohttp
 import backoff
 import backoff.types
@@ -124,7 +125,7 @@ async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
                     f"API flag validation error: {response.status} - {await response.text()}",
                 )
                 return False
-    except Exception as e:  # noqa: BLE001
+    except (aiohttp.ClientError, OSError, ValueError) as e:
         logger.error(f"Error during API flag validation: {e}")
         return False
 
@@ -159,7 +160,7 @@ async def validate_api_key(api_key: str) -> bool:
                 logger.info(f"API key validated successfully (status {response.status})")
                 return True
 
-    except Exception as e:  # noqa: BLE001
+    except (aiohttp.ClientError, OSError, ValueError) as e:
         logger.error(f"API key validation error: {e}")
         return False
 
@@ -192,13 +193,79 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
                 logger.info(f"Challenge {challenge_id} is available (status {response.status})")
                 return True
 
-    except Exception as e:  # noqa: BLE001
+    except (aiohttp.ClientError, OSError, ValueError) as e:
         logger.error(f"Error checking challenge {challenge_id} availability: {e}")
         return False
 
 
 # Tasks
 
+
+def _handle_connection_errors(chat: rg.Chat) -> str | None:
+    """Handle connection and service errors."""
+    if isinstance(
+        chat.error,
+        litellm.exceptions.ServiceUnavailableError | litellm.exceptions.APIConnectionError,
+    ):
+        error_type = (
+            "service_unavailable"
+            if isinstance(chat.error, litellm.exceptions.ServiceUnavailableError)
+            else "api_connection"
+        )
+        logger.error(f"|- {error_type.replace('_', ' ').title()} error: {chat.error}")
+        dn.log_metric(f"{error_type}_error", 1)
+        dn.log_metric("terminated_challenges", 1)
+        return "terminate"  # Signal to terminate the challenge
+    return None
+
+def _handle_timeout_errors(chat: rg.Chat) -> str | None:
+    """Handle timeout errors."""
+    if "timed out" in str(chat.error):
+        logger.error("|- Inference timeout")
+        dn.log_metric("inference_timeout", 1)
+        return "continue"  # Signal to continue with current pipeline
+    return None
+
+def _handle_token_errors(chat: rg.Chat) -> str | None:
+    """Handle token limit errors."""
+    if "number of tokens allowed" in str(chat.error):
+        logger.error("|- Ran out of tokens")
+        dn.log_metric("max_tokens", 1)
+        return "terminate"  # Signal to terminate
+    return None
+
+async def _handle_cache_errors(
+    chat: rg.Chat,
+    args: AIRTBenchArgs,
+    pipeline: rg.ChatPipeline,
+    generator: rg.Generator | None,
+    backoff_wrapper: t.Any,
+) -> rg.ChatPipeline | None:
+    """Handle caching-related errors."""
+    if "cache_control" in str(chat.error) and args.enable_cache and generator is not None:
+        logger.warning(
+            f"|- Caching not supported by provider, disabling cache and retrying: {chat.error}",
+        )
+        dn.log_metric("cache_unsupported", 1)
+        # Create new pipeline without caching
+        retry_pipeline = (
+            generator.wrap(backoff_wrapper).chat(pipeline.chat.messages).cache(False)  # noqa: FBT003
+        )
+        try:
+            retry_chat = await retry_pipeline.catch(
+                litellm.exceptions.InternalServerError,
+                litellm.exceptions.BadRequestError,
+                litellm.exceptions.Timeout,
+                litellm.exceptions.ServiceUnavailableError,
+                litellm.exceptions.APIConnectionError,
+                on_failed="include",
+            ).run()
+            if not retry_chat.failed:
+                logger.info("|- Successfully retried without cache")
+                return retry_pipeline
+        except (rg.core.RiggingError, litellm.exceptions.LiteLLMError) as e:
+            logger.warning(f"|- Retry without cache also failed: {e}")
+    return None
 
 @dn.task(name="Step")
 async def run_step(  # noqa: PLR0913, PLR0911, PLR0912, PLR0915
@@ -228,55 +295,25 @@ async def run_step(  # noqa: PLR0913, PLR0911, PLR0912, PLR0915
     ).run()
 
     if chat.failed:
-        # Handle connection/service errors that should terminate the challenge
-        if isinstance(
-            chat.error,
-            litellm.exceptions.ServiceUnavailableError | litellm.exceptions.APIConnectionError,
-        ):
-            error_type = (
-                "service_unavailable"
-                if isinstance(chat.error, litellm.exceptions.ServiceUnavailableError)
-                else "api_connection"
-            )
-            logger.error(f"|- {error_type.replace('_', ' ').title()} error: {chat.error}")
-            dn.log_metric(f"{error_type}_error", 1)
-            dn.log_metric("terminated_challenges", 1)
-            return None  # Terminate the challenge by returning None
-
-        if "timed out" in str(chat.error):
-            logger.error("|- Inference timeout")
-            dn.log_metric("inference_timeout", 1)
-            return pipeline
-
-        if "number of tokens allowed" in str(chat.error):
-            logger.error("|- Ran out of tokens")
-            dn.log_metric("max_tokens", 1)
+        # Handle connection/service errors
+        error_action = _handle_connection_errors(chat)
+        if error_action == "terminate":
             return None
 
-        # Handle caching-related errors by disabling cache and retrying
-        if "cache_control" in str(chat.error) and args.enable_cache and generator is not None:
-            logger.warning(
-                f"|- Caching not supported by provider, disabling cache and retrying: {chat.error}",
-            )
-            dn.log_metric("cache_unsupported", 1)
-            # Create new pipeline without caching
-            retry_pipeline = (
-                generator.wrap(backoff_wrapper).chat(pipeline.chat.messages).cache(False)  # noqa: FBT003
-            )
-            try:
-                retry_chat = await retry_pipeline.catch(
-                    litellm.exceptions.InternalServerError,
-                    litellm.exceptions.BadRequestError,
-                    litellm.exceptions.Timeout,
-                    litellm.exceptions.ServiceUnavailableError,
-                    litellm.exceptions.APIConnectionError,
-                    on_failed="include",
-                ).run()
-                if not retry_chat.failed:
-                    logger.info("|- Successfully retried without cache")
-                    return retry_pipeline
-            except Exception as e:  # noqa: BLE001
-                logger.warning(f"|- Retry without cache also failed: {e}")
+        # Handle timeout errors
+        error_action = _handle_timeout_errors(chat)
+        if error_action == "continue":
+            return pipeline
+
+        # Handle token limit errors
+        error_action = _handle_token_errors(chat)
+        if error_action == "terminate":
+            return None
+
+        # Handle caching-related errors
+        retry_pipeline = await _handle_cache_errors(chat, args, pipeline, generator, backoff_wrapper)
+        if retry_pipeline is not None:
+            return retry_pipeline
 
         logger.warning(f"|- Chat failed: {chat.error}")
         dn.log_metric("failed_chats", 1)
@@ -667,7 +704,7 @@ async def attempt_challenge(
                 cleanup_counter = 0
                 try:
                     await cleanup_routine()
-                except Exception as e:  # noqa: BLE001
+                except (aiodocker.exceptions.DockerError, OSError, ConnectionError) as e:
                     logger.warning(f"Cleanup routine failed: {e}")
 
             if pipeline is None:
