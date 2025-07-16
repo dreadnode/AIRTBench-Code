@@ -49,7 +49,7 @@ app = cyclopts.App()
 class AIRTBenchArgs:
     model: str
     """Model to use for inference"""
-    platform_api_key: str
+    platform_api_key: str | None = None
     """Platform API key"""
     include_thoughts: bool = False
     """Include thoughts in the reasoning"""
@@ -741,7 +741,7 @@ async def attempt_challenge(
 
 
 @app.default
-async def main(
+async def main(  # noqa: PLR0912
     *,
     args: AIRTBenchArgs,
     dn_args: DreadnodeArgs
@@ -780,11 +780,17 @@ async def main(
     logger.info("API key validated successfully")
 
     # Build the container
-    image = build_container(
-        "airtbench",
-        g_container_dir / "Dockerfile",
-        g_container_dir,
-    )
+    try:
+        image = build_container(
+            "airtbench",
+            g_container_dir / "Dockerfile",
+            g_container_dir,
+        )
+    except RuntimeError as e:
+        if "Docker connection failed" in str(e):
+            logger.error("Cannot proceed without Docker. Please start Docker and try again.")
+            return
+        raise
 
     challenges = load_challenges()
 
