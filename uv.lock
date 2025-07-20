@@ -178,7 +178,7 @@ requires-dist = [
     { name = "backoff", specifier = ">=2.2.1" },
     { name = "cyclopts", specifier = ">=3.12.0" },
     { name = "docker", specifier = ">=7.1.0" },
-    { name = "dreadnode", specifier = "==1.10.0" },
+    { name = "dreadnode", specifier = "==1.11.1" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pythonnet", specifier = ">=3.0.5" },
@@ -503,7 +503,7 @@ version = "3.16.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
-    { name = "docstring-parser", marker = "python_full_version < '4.0'" },
+    { name = "docstring-parser", marker = "python_full_version < '4'" },
     { name = "rich" },
     { name = "rich-rst" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
@@ -602,7 +602,7 @@ wheels = [
 
 [[package]]
 name = "dreadnode"
-version = "1.10.0"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coolname" },
@@ -613,9 +613,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-ulid" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/88/74/05172826c19f75a0ecf46948e0481555241585021dd8c73d155cb7814b8a/dreadnode-1.10.0.tar.gz", hash = "sha256:30513625f5a37cb1fb232c67682c54aef95af815ff367843c9845522300d3273", size = 55706, upload-time = "2025-06-26T21:01:52.525Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/6c/3ec92fa911777fbbe59ec5367dd10065b39ff98e7e5381371518cae97535/dreadnode-1.11.1.tar.gz", hash = "sha256:90406dd2ca02575551c1f89027ecec8ab3b34571962b1f92f46cf274279d013a", size = 58173, upload-time = "2025-07-17T19:04:31.854Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0a/72/48bb41ed87489643bae0e665ec47b8d0afe5cf32a56a61c35fe44b523a8f/dreadnode-1.10.0-py3-none-any.whl", hash = "sha256:7357b8fd227d25464f75b3e3e838392af28d068a61b9fd158a45697de4857090", size = 66511, upload-time = "2025-06-26T21:01:50.881Z" },
+    { url = "https://files.pythonhosted.org/packages/55/df/711ba3e22eec935b17a3f17c540208b13cf7b3193bdb75cecffdcc0c1df2/dreadnode-1.11.1-py3-none-any.whl", hash = "sha256:a2514dd448d9cd96799181736a9b04e2ed825cf008ea888dbf9643948b5bf806", size = 69471, upload-time = "2025-07-17T19:04:30.737Z" },
 ]
 
 [[package]]
