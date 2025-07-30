@@ -178,7 +178,7 @@ requires-dist = [
     { name = "backoff", specifier = ">=2.2.1" },
     { name = "cyclopts", specifier = ">=3.12.0" },
     { name = "docker", specifier = ">=7.1.0" },
-    { name = "dreadnode", specifier = "==1.12.2" },
+    { name = "dreadnode", specifier = "==1.13.2" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pythonnet", specifier = ">=3.0.5" },
@@ -499,7 +499,7 @@ wheels = [
 
 [[package]]
 name = "cyclopts"
-version = "3.16.2"
+version = "3.22.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -508,9 +508,9 @@ dependencies = [
     { name = "rich-rst" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/07/88/286782d783ee2c6614babbecf7db00622e7c270f49cd2f59ee01b3435668/cyclopts-3.16.2.tar.gz", hash = "sha256:2e570336b6b1b1e10747af478f675b7cd7f66e3138a7d9bbd0aa10adf437b0d5", size = 72082, upload-time = "2025-05-26T13:45:40.505Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/05/9d5a0a8f4628f6a1230b43e0c34a7dc45c40a17045a09f4a5d7145da12e2/cyclopts-3.22.3.tar.gz", hash = "sha256:7df1d05e4b56b07079e13880b457b78522101531e2947af1a68f182e89742b34", size = 74837, upload-time = "2025-07-23T23:25:09.815Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/a5/5286a2f354dc64a5afbbb6eef49c52b73b4d984fb919b47a06bdc653e086/cyclopts-3.16.2-py3-none-any.whl", hash = "sha256:3d93cb66af31617343861bc51aa16e5a021ad7590dbd7a6f0634d5e3a1ef8e3b", size = 81926, upload-time = "2025-05-26T13:45:38.959Z" },
+    { url = "https://files.pythonhosted.org/packages/16/1f/4b9f6986add9f6ff361c1bfffeb08fc2f2f6752f8adf8d4dcf0a988b6f28/cyclopts-3.22.3-py3-none-any.whl", hash = "sha256:771ae584868c8beeac74184a96e9fad3726c787b17e47a6f0d5f42cece1df57a", size = 84941, upload-time = "2025-07-23T23:25:08.527Z" },
 ]
 
 [[package]]
@@ -602,10 +602,11 @@ wheels = [
 
 [[package]]
 name = "dreadnode"
-version = "1.12.2"
+version = "1.13.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coolname" },
+    { name = "cyclopts" },
     { name = "fsspec", extra = ["s3"] },
     { name = "httpx" },
     { name = "logfire" },
@@ -614,9 +615,9 @@ dependencies = [
     { name = "python-ulid" },
     { name = "rigging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f7/58/927f1b4f7498df7e962a05684ff8026b30b599e6dc594308cc78531822ae/dreadnode-1.12.2.tar.gz", hash = "sha256:5c02359ad6fb4b82794c73ad1dc773e84af6d0317b732912c299ddda74b90081", size = 68429, upload-time = "2025-07-23T17:00:03.668Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7a/47/137c2fe5a7117b97d125cda2b86fbb6017fc9fd5bd639b47cdd54903ccde/dreadnode-1.13.2.tar.gz", hash = "sha256:489ca59f60aeeeb202d05e7f0949263ca5a7dc08ecbde1cd761f2d8ee388e3a2", size = 84525, upload-time = "2025-07-29T17:06:27.101Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ac/94/ecdc9d12f0270f2d6c4df4934abc4bbc084a8aa19a01216518ae5dbe0218/dreadnode-1.12.2-py3-none-any.whl", hash = "sha256:955a7c4be29027f4a82fd7aacb94bcf71e2b921548882296f296a7bd0db868e0", size = 85043, upload-time = "2025-07-23T17:00:02.12Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/f6/bf7f0f047349332caedc393f59c9434821ac522fc42151820fdf5a9028d7/dreadnode-1.13.2-py3-none-any.whl", hash = "sha256:dbd7b15e5f7948fbcbbac4c1f1b7de34ae942bf9b7a874514eeb06427aeabad7", size = 107512, upload-time = "2025-07-29T17:06:25.659Z" },
 ]
 
 [[package]]
