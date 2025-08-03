@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -178,7 +178,7 @@ requires-dist = [
     { name = "backoff", specifier = ">=2.2.1" },
     { name = "cyclopts", specifier = ">=3.12.0" },
     { name = "docker", specifier = ">=7.1.0" },
-    { name = "dreadnode", specifier = "==1.13.2" },
+    { name = "dreadnode", specifier = "==1.13.4" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pythonnet", specifier = ">=3.0.5" },
@@ -602,7 +602,7 @@ wheels = [
 
 [[package]]
 name = "dreadnode"
-version = "1.13.2"
+version = "1.13.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coolname" },
@@ -615,9 +615,9 @@ dependencies = [
     { name = "python-ulid" },
     { name = "rigging" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7a/47/137c2fe5a7117b97d125cda2b86fbb6017fc9fd5bd639b47cdd54903ccde/dreadnode-1.13.2.tar.gz", hash = "sha256:489ca59f60aeeeb202d05e7f0949263ca5a7dc08ecbde1cd761f2d8ee388e3a2", size = 84525, upload-time = "2025-07-29T17:06:27.101Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/45/2a/f6acdfb9f776b515d65fa29701a50ba930a3df105e9d5a9f7c76e8ed32d2/dreadnode-1.13.4.tar.gz", hash = "sha256:e59b3673f72fdb30508a4fbc8034cb08a9a1abe6eb0be4583bed804d2e443091", size = 84766, upload-time = "2025-07-31T09:02:02.669Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5f/f6/bf7f0f047349332caedc393f59c9434821ac522fc42151820fdf5a9028d7/dreadnode-1.13.2-py3-none-any.whl", hash = "sha256:dbd7b15e5f7948fbcbbac4c1f1b7de34ae942bf9b7a874514eeb06427aeabad7", size = 107512, upload-time = "2025-07-29T17:06:25.659Z" },
+    { url = "https://files.pythonhosted.org/packages/16/63/28118ba76f22d581e6b13b8826c7a685f4a911f716b1b8edaf90ae339f27/dreadnode-1.13.4-py3-none-any.whl", hash = "sha256:89df7ad89c6a8f68c8c32fc845bf4ffd686ce96db65a33acbd770dc61dc52544", size = 107846, upload-time = "2025-07-31T09:02:01.12Z" },
 ]
 
 [[package]]
