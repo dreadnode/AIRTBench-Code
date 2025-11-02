@@ -178,7 +178,7 @@ requires-dist = [
     { name = "backoff", specifier = ">=2.2.1" },
     { name = "cyclopts", specifier = ">=3.12.0" },
     { name = "docker", specifier = ">=7.1.0" },
-    { name = "dreadnode", specifier = "==1.14.1" },
+    { name = "dreadnode", specifier = "==1.15.3" },
     { name = "ipykernel", specifier = ">=6.29.5" },
     { name = "mypy", specifier = ">=1.15.0" },
     { name = "pythonnet", specifier = ">=3.0.5" },
@@ -526,18 +526,19 @@ wheels = [
 
 [[package]]
 name = "cyclopts"
-version = "3.22.3"
+version = "4.2.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
-    { name = "docstring-parser", marker = "python_full_version < '4'" },
+    { name = "docstring-parser" },
     { name = "rich" },
     { name = "rich-rst" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/05/9d5a0a8f4628f6a1230b43e0c34a7dc45c40a17045a09f4a5d7145da12e2/cyclopts-3.22.3.tar.gz", hash = "sha256:7df1d05e4b56b07079e13880b457b78522101531e2947af1a68f182e89742b34", size = 74837, upload-time = "2025-07-23T23:25:09.815Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/51/a67b17fac2530d22216a335bd10f48631412dd824013ea559ec236668f76/cyclopts-4.2.1.tar.gz", hash = "sha256:49bb4c35644e7a9658f706ade4cf1a9958834b2dca4425e2fafecf8a0537fac7", size = 148693, upload-time = "2025-10-31T14:30:58.681Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/16/1f/4b9f6986add9f6ff361c1bfffeb08fc2f2f6752f8adf8d4dcf0a988b6f28/cyclopts-3.22.3-py3-none-any.whl", hash = "sha256:771ae584868c8beeac74184a96e9fad3726c787b17e47a6f0d5f42cece1df57a", size = 84941, upload-time = "2025-07-23T23:25:08.527Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/1d/2b313e157c9c7bba319e42f464d15073d32a81ac4827bdc5b7de38832b3e/cyclopts-4.2.1-py3-none-any.whl", hash = "sha256:17a801faa814988b0307385ef8aaeb6b14b4d64473015a2d66bde9ea13f14d9c", size = 184333, upload-time = "2025-10-31T14:30:57.581Z" },
 ]
 
 [[package]]
@@ -629,27 +630,28 @@ wheels = [
 
 [[package]]
 name = "dreadnode"
-version = "1.14.1"
+version = "1.15.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "coolname" },
     { name = "cyclopts" },
     { name = "fsspec", extra = ["s3"] },
     { name = "httpx" },
-    { name = "jsonpath" },
     { name = "logfire" },
     { name = "loguru" },
     { name = "numpy" },
     { name = "optuna" },
     { name = "pandas" },
     { name = "pydantic" },
+    { name = "python-jsonpath" },
     { name = "python-ulid" },
+    { name = "pyyaml" },
     { name = "rigging" },
     { name = "universal-pathlib" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1a/99/c730ace261c56a81f77b8159285b490cd038a9eb29ea2c72790c80db4ab5/dreadnode-1.14.1.tar.gz", hash = "sha256:446b0b24bdd9adbb56ecb75dddbd74e5fe4b4ca074d12cfe34379de57407f06a", size = 253400, upload-time = "2025-09-19T21:46:59.33Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/41/0565f76b133bdf751bf5452dfa292ce7e2e51f20bdc10a86ddee580b07c7/dreadnode-1.15.3.tar.gz", hash = "sha256:2cfac4e81fa8312ddf02744d71add7f918255d2ad2620d33557ed8e9ed11438c", size = 280078, upload-time = "2025-10-30T18:31:38.401Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/25/35/bfb7f77ce6f18fd9a885081032fbbcc36caa15f683e8bdb2b32d536efe58/dreadnode-1.14.1-py3-none-any.whl", hash = "sha256:82b80d120cb6e8ce7725730796e844ee39ca2222559eec36878f015f0812fdcc", size = 295579, upload-time = "2025-09-19T21:46:57.572Z" },
+    { url = "https://files.pythonhosted.org/packages/11/b2/9f6dd1d3e783ff7ad1f7f19a765de72de9735c49bc20ee3679a81e47526e/dreadnode-1.15.3-py3-none-any.whl", hash = "sha256:9faf9a2557948bfbd58364523902cc22554333297e93186ccaed3ebb11b59b34", size = 329589, upload-time = "2025-10-30T18:31:36.928Z" },
 ]
 
 [[package]]
@@ -1146,12 +1148,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/00/2a/e867e8531cf3e36b4
 wheels = [
     { url = "https://files.pythonhosted.org/packages/31/b4/b9b800c45527aadd64d5b442f9b932b00648617eb5d63d2c7a6587b7cafc/jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980", size = 20256, upload-time = "2022-06-17T18:00:10.251Z" },
 ]
-
-[[package]]
-name = "jsonpath"
-version = "0.82.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cf/a1/693351acd0a9edca4de9153372a65e75398898ea7f8a5c722ab00f464929/jsonpath-0.82.2.tar.gz", hash = "sha256:d87ef2bcbcded68ee96bc34c1809b69457ecec9b0c4dd471658a12bd391002d1", size = 10353, upload-time = "2023-08-24T18:57:55.459Z" }
 
 [[package]]
 name = "jsonpath-ng"
@@ -1837,6 +1833,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pathlib-abc"
+version = "0.5.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/cb/448649d7f25d228bf0be3a04590ab7afa77f15e056f8fa976ed05ec9a78f/pathlib_abc-0.5.2.tar.gz", hash = "sha256:fcd56f147234645e2c59c7ae22808b34c364bb231f685ddd9f96885aed78a94c", size = 33342, upload-time = "2025-10-10T18:37:20.524Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b1/29/c028a0731e202035f0e2e0bfbf1a3e46ad6c628cbb17f6f1cc9eea5d9ff1/pathlib_abc-0.5.2-py3-none-any.whl", hash = "sha256:4c9d94cf1b23af417ce7c0417b43333b06a106c01000b286c99de230d95eefbb", size = 19070, upload-time = "2025-10-10T18:37:19.437Z" },
+]
+
+[[package]]
 name = "pathspec"
 version = "0.12.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2189,6 +2194,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/88/2c/7bb1416c5620485aa793f2de31d3df393d3686aa8a8506d11e10e13c5baf/python_dotenv-1.1.0.tar.gz", hash = "sha256:41f90bc6f5f177fb41f53e87666db362025010eb28f60a01c9143bfa33a2b2d5", size = 39920, upload-time = "2025-03-25T10:14:56.835Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1e/18/98a99ad95133c6a6e2005fe89faedf294a748bd5dc803008059409ac9b1e/python_dotenv-1.1.0-py3-none-any.whl", hash = "sha256:d7c01d9e2293916c18baf562d95698754b0dbbb5e74d457c45d4f6561fb9d55d", size = 20256, upload-time = "2025-03-25T10:14:55.034Z" },
+]
+
+[[package]]
+name = "python-jsonpath"
+version = "2.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f3/db/f1f19205b0df6eb0195de154dc6c967448802dfb573487fa8a4206a243cd/python_jsonpath-2.0.1.tar.gz", hash = "sha256:32a84ebb2dc0ec1b42a6e165b0f9174aef8310bad29154ad9aee31ac37cca18f", size = 49659, upload-time = "2025-09-13T08:01:47.82Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/d4/64d7cdc01269f5fed45e6a69f5395c30451958c299ca5cbc1442a4f3f9b9/python_jsonpath-2.0.1-py3-none-any.whl", hash = "sha256:ebd518b7c883acc5b976518d76b6c96288405edec7d9ef838641869c1e1a5eb7", size = 64060, upload-time = "2025-09-13T08:01:46.184Z" },
 ]
 
 [[package]]
@@ -3022,14 +3036,15 @@ wheels = [
 
 [[package]]
 name = "universal-pathlib"
-version = "0.2.6"
+version = "0.3.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fsspec" },
+    { name = "pathlib-abc" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/eb/21/dd871495af3933e585261adce42678dcdf1168c9d6fa0a8f7b6565e54472/universal_pathlib-0.2.6.tar.gz", hash = "sha256:50817aaeaa9f4163cb1e76f5bdf84207fa05ce728b23fd779479b3462e5430ac", size = 175427, upload-time = "2024-12-13T00:58:27.514Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/79/15/907728d15ebc125616eb275245d1f1ba0d5a66150eea74bea68651f22d87/universal_pathlib-0.3.4.tar.gz", hash = "sha256:8472df61ea931eb7e8158abf5a12ec9c45103dc58716c0103cf5e88712fa357a", size = 203284, upload-time = "2025-10-16T08:02:59.003Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e5/4d/2e577f6db7aa0f932d19f799c18f604b2b302c65f733419b900ec07dbade/universal_pathlib-0.2.6-py3-none-any.whl", hash = "sha256:700dec2b58ef34b87998513de6d2ae153b22f083197dfafb8544744edabd1b18", size = 50087, upload-time = "2024-12-13T00:58:24.582Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/0c/6dc1e50b29ba5ebdbeaab325207e2bba93f072207a6787accc4630b811e3/universal_pathlib-0.3.4-py3-none-any.whl", hash = "sha256:69b6250d9a79dbc33a9e6a7b0e732aece8b0e178fe0af35f104b4e207fd9d5ae", size = 72105, upload-time = "2025-10-16T08:02:57.333Z" },
 ]
 
 [[package]]
