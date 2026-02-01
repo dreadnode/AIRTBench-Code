@@ -84,6 +84,10 @@ class DreadnodeArgs:
     """Local directory to store data in"""
     project: str = "airtbench"
     """Project name"""
+    organization: str | None = None
+    """Organization name"""
+    workspace: str | None = None
+    """Workspace name"""
 
 
 # Models
@@ -709,6 +713,8 @@ async def main(
         token=dn_args.token,
         local_dir=dn_args.local_dir or False,
         project=dn_args.project,
+        organization=dn_args.organization,
+        workspace=dn_args.workspace,
         console=True,
     )
 
