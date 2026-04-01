@@ -43,3 +43,6 @@ ignore = [
 
 [tool.ruff.format]
 skip-magic-trailing-comma = false
+
+[tool.uv]
+exclude-newer = "3 days"
