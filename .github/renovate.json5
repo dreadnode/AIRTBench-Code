@@ -9,6 +9,7 @@
     ":automergeBranch",
   ],
   dependencyDashboardTitle: "Renovate Dashboard 🤖",
+  minimumReleaseAge: "3 days",
   suppressNotifications: ["prIgnoreNotification"],
   rebaseWhen: "conflicted",
   commitBodyTable: true,
@@ -19,7 +20,9 @@
     "github-actions",
     "dockerfile",
     "docker-compose",
-    "pre-commit"
+    "pre-commit",
+    "pep621",
+    "uv",
   ],
   ignorePaths: [],
   packageRules: [
