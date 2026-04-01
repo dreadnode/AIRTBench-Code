@@ -22,7 +22,6 @@
     "docker-compose",
     "pre-commit",
     "pep621",
-    "uv",
   ],
   ignorePaths: [],
   packageRules: [
