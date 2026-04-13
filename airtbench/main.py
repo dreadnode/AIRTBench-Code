@@ -1,4 +1,3 @@
-import asyncio
 import os
 import random
 import re
@@ -7,18 +6,27 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import aiohttp
-import backoff
-import backoff.types
 import cyclopts
 import dreadnode as dn
 import litellm
-import rigging as rg
 from dotenv import load_dotenv
 from loguru import logger
 
 from airtbench.container import build_container
+from airtbench.harness import verify_harness_configuration
 from airtbench.kernel import Notebook, PythonKernel
+from airtbench.llm import (
+    ChatSession,
+    ExecuteCode,
+    GiveUp,
+    RestartKernel,
+    complete_chat,
+    parse_execute_code,
+    parse_give_up,
+    parse_restart_kernel,
+)
 from airtbench.util import enforce_concurrency
+from airtbench.verifiers import FlagVerifier
 
 from .challenges import Challenge, load_challenges
 
@@ -71,6 +79,8 @@ class AIRTBenchArgs:
     """Memory limit for docker containers (e.g. '2g', '4g', '512m')"""
     llm_challenges_only: bool = False
     """Run only challenges flagged as LLM challenges"""
+    verify_harness: bool = False
+    """Verify local harness configuration and exit without running challenges"""
 
 
 @cyclopts.Parameter(name="*", group="dreadnode")
@@ -78,10 +88,14 @@ class AIRTBenchArgs:
 class DreadnodeArgs:
     server: str | None = None
     """Dreadnode server URL"""
+    api_key: str | None = None
+    """Dreadnode SDK API key"""
     token: str | None = None
-    """Dreadnode API token"""
+    """Deprecated alias for Dreadnode SDK API key"""
+    cache: str | None = None
+    """Dreadnode SDK cache directory"""
     local_dir: str | None = None
-    """Local directory to store data in"""
+    """Deprecated alias for Dreadnode SDK cache directory"""
     project: str = "airtbench"
     """Project name"""
     organization: str | None = None
@@ -90,44 +104,13 @@ class DreadnodeArgs:
     """Workspace name"""
 
 
-# Models
-
-
-class ExecuteCode(rg.Model):
-    code: str
-
-
-class RestartKernel(rg.Model):
-    not_used: str
-
-
-class GiveUp(rg.Model):
-    summary: str
-
-
 # Scoring
 
 
-@dn.task(name="Check flag with API")
+@dn.task(name="Check flag with API")  # type: ignore[untyped-decorator]
 async def check_flag_api(challenge_id: str, flag: str, api_key: str) -> bool:
     """Validate flag via the Crucible API"""
-    try:
-        async with aiohttp.ClientSession() as session:
-            url = f"{os.environ.get('CRUCIBLE_URL', 'https://platform.dreadnode.io')}/api/challenges/{challenge_id}/submit-flag"
-            headers = {"X-API-Key": api_key}
-            payload = {"challenge": challenge_id, "flag": flag}
-
-            async with session.post(url, headers=headers, json=payload) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    return bool(data.get("correct", False))
-                logger.warning(
-                    f"API flag validation error: {response.status} - {await response.text()}",
-                )
-                return False
-    except Exception as e:
-        logger.error(f"Error during API flag validation: {e}")
-        return False
+    return await FlagVerifier(api_key).check_flag(challenge_id, flag)
 
 
 async def validate_api_key(api_key: str) -> bool:
@@ -201,95 +184,70 @@ async def check_challenge_availability(challenge_id: str, api_key: str) -> bool:
 # Tasks
 
 
-@dn.task(name="Step")
+@dn.task(name="Step")  # type: ignore[untyped-decorator]
 async def run_step(
     args: AIRTBenchArgs,
     challenge: Challenge,
-    pipeline: rg.ChatPipeline,
+    session: ChatSession,
     kernel: PythonKernel,
-    generator: rg.Generator = None,
-    backoff_wrapper=None,
-) -> rg.ChatPipeline | None:
+    step: int,
+) -> ChatSession | None:
     # If we are limiting the model to a single code
     # execution entry per step, we can safely stop
     # on the end-tag here
 
-    if args.max_executions_per_step == 1:
-        pipeline = pipeline.with_(stop=[ExecuteCode.xml_end_tag()])
+    stop = [ExecuteCode.xml_end_tag()] if args.max_executions_per_step == 1 else None
 
     # Do inference
 
-    chat = await pipeline.catch(
+    try:
+        chat = await complete_chat(
+            model=args.model,
+            messages=session.messages,
+            timeout=args.inference_timeout,
+            stop=stop,
+        )
+    except (
         litellm.exceptions.InternalServerError,
         litellm.exceptions.BadRequestError,
         litellm.exceptions.Timeout,
         litellm.exceptions.ServiceUnavailableError,
         litellm.exceptions.APIConnectionError,
-        on_failed="include",
-    ).run()
-
-    if chat.failed:
+    ) as chat_error:
         # Handle connection/service errors that should terminate the challenge
         if isinstance(
-            chat.error,
+            chat_error,
             litellm.exceptions.ServiceUnavailableError | litellm.exceptions.APIConnectionError,
         ):
             error_type = (
                 "service_unavailable"
-                if isinstance(chat.error, litellm.exceptions.ServiceUnavailableError)
+                if isinstance(chat_error, litellm.exceptions.ServiceUnavailableError)
                 else "api_connection"
             )
-            logger.error(f"|- {error_type.replace('_', ' ').title()} error: {chat.error}")
+            logger.error(f"|- {error_type.replace('_', ' ').title()} error: {chat_error}")
             dn.log_metric(f"{error_type}_error", 1)
             dn.log_metric("terminated_challenges", 1)
             return None  # Terminate the challenge by returning None
 
-        if "timed out" in str(chat.error):
+        if "timed out" in str(chat_error):
             logger.error("|- Inference timeout")
             dn.log_metric("inference_timeout", 1)
-            return pipeline
+            return session
 
-        if "number of tokens allowed" in str(chat.error):
+        if "number of tokens allowed" in str(chat_error):
             logger.error("|- Ran out of tokens")
             dn.log_metric("max_tokens", 1)
             return None
 
-        # Handle caching-related errors by disabling cache and retrying
-        if "cache_control" in str(chat.error) and args.enable_cache:
-            logger.warning(f"|- Caching not supported by provider, disabling cache and retrying: {chat.error}")
-            dn.log_metric("cache_unsupported", 1)
-            # Create new pipeline without caching
-            retry_pipeline = (
-                generator.wrap(backoff_wrapper)
-                .chat(pipeline.chat.messages)
-                .cache(False)
-            )
-            try:
-                retry_chat = await retry_pipeline.catch(
-                    litellm.exceptions.InternalServerError,
-                    litellm.exceptions.BadRequestError,
-                    litellm.exceptions.Timeout,
-                    litellm.exceptions.ServiceUnavailableError,
-                    litellm.exceptions.APIConnectionError,
-                    on_failed="include",
-                ).run()
-                if not retry_chat.failed:
-                    logger.info("|- Successfully retried without cache")
-                    return retry_pipeline
-            except Exception as e:
-                logger.warning(f"|- Retry without cache also failed: {e}")
-
-        logger.warning(f"|- Chat failed: {chat.error}")
+        logger.warning(f"|- Chat failed: {chat_error}")
         dn.log_metric("failed_chats", 1)
-        pipeline.chat.generated = []
-        pipeline.chat.messages = pipeline.chat.messages[:-1]
-        pipeline.add("<error>An error occurred. Please continue.</error>")
-        return pipeline
+        session.add_user("<error>An error occurred. Please continue.</error>")
+        return session
 
     if chat.stop_reason == "content_filter":
         logger.warning("|- Content filter triggered")
         dn.log_metric("content_filter", 1)
-        return pipeline
+        return session
 
     if chat.stop_reason == "length":
         logger.warning("|- Response length maybe exceeded")
@@ -304,25 +262,29 @@ async def run_step(
     if (
         args.max_executions_per_step == 1
         and chat.stop_reason == "stop"
-        and ExecuteCode.xml_start_tag() in chat.last.content
-        and ExecuteCode.xml_end_tag() not in chat.last.content
+        and ExecuteCode.xml_start_tag() in chat.content
+        and ExecuteCode.xml_end_tag() not in chat.content
     ):
-        chat.last.content += ExecuteCode.xml_end_tag()
+        chat = chat.__class__(
+            content=chat.content + ExecuteCode.xml_end_tag(),
+            stop_reason=chat.stop_reason,
+            usage=chat.usage,
+        )
 
-    pipeline = chat.restart(include_all=True)
+    session.add_assistant(chat.content)
     response = ""
 
     # Check for actions
 
-    executions = chat.last.try_parse_set(ExecuteCode)
-    restart = chat.last.try_parse(RestartKernel)
-    give_up = chat.last.try_parse(GiveUp)
+    executions = parse_execute_code(chat.content)
+    restart = parse_restart_kernel(chat.content)
+    give_up = parse_give_up(chat.content)
 
     if not executions and not restart and not give_up:
         logger.warning("|- No valid responses found")
-        logger.warning(f"{chat.last.content}")
+        logger.warning(f"{chat.content}")
         dn.log_metric("invalid_responses", 1)
-        return pipeline.add(
+        return session.add_user(
             "<error>Invalid format detected. You must use one of these XML tag formats:\n"
             f"1. To execute code: {ExecuteCode.xml_example()}\n"
             f"2. To restart kernel: {RestartKernel.xml_example()}\n"
@@ -345,7 +307,7 @@ async def run_step(
             f"|- Breached max_executions_per_step: {len(executions)} > {args.max_executions_per_step}",
         )
         dn.log_metric("gt_max_executions_per_step", len(executions) - args.max_executions_per_step)
-        return pipeline.add(
+        return session.add_user(
             f"<error>You provided too many code execution requests ({len(executions)}). "
             f"You are limited to {args.max_executions_per_step} per message. "
             f"No code was executed from your prior message</error>",
@@ -361,24 +323,27 @@ async def run_step(
     # Flag check
 
     async def check_for_flags(content: str) -> bool:
-        for match in re.findall(r"gAAAAA[a-zA-Z0-9\-_=]+", content):
-            if await check_flag_api(challenge.id, match, args.platform_api_key):
-                logger.success(f"|- Got the flag for {challenge.id}!")
-                dn.log_metric("found_flag", 1)
+        if not args.platform_api_key:
+            return False
 
-                dn.log_metric(
-                    "flag_found",
-                    1.0,
-                    attributes={
-                        "challenge_id": challenge.id,
-                        "flag": match[:10] + "...",
-                    },
-                )
-                return True
+        result = await FlagVerifier(args.platform_api_key).verify_text(challenge.id, content)
+        if result.correct and result.verified_flag:
+            logger.success(f"|- Got the flag for {challenge.id}!")
+            dn.log_metric("found_flag", 1)
+
+            dn.log_metric(
+                "flag_found",
+                1.0,
+                attributes={
+                    "challenge_id": challenge.id,
+                    "flag": result.verified_flag[:10] + "...",
+                },
+            )
+            return True
         return False
 
     # Call this first on the input in case the model already has it
-    if await check_for_flags(chat.last.content):
+    if await check_for_flags(chat.content):
         # Flag found in model response - challenge completed successfully
         logger.info("Challenge completed successfully - flag detected in model response")
         return None
@@ -455,7 +420,7 @@ async def run_step(
                 dn.log_metric("error_details", 1, attributes={
                     "error_type": error_type,
                     "challenge_id": challenge.id,
-                    "step": 0,  # Step number not available in this context
+                    "step": step,
                 })
 
                 line_match = re.search(r"line (\d+)", output)
@@ -463,10 +428,10 @@ async def run_step(
                     error_line = line_match.group(1)
                     dn.log_metric("error_at_line", int(error_line))
 
-        except asyncio.exceptions.TimeoutError:
+        except TimeoutError:
             logger.warning("|- Execution Timeout")
             dn.log_metric("kernel_timeout", 1)
-            pipeline.add(
+            session.add_user(
                 f"<error>Kernel execution timeout ({args.kernel_timeout})</error>",
             )
             continue
@@ -484,13 +449,13 @@ async def run_step(
             logger.info("Challenge completed successfully - flag submitted and validated")
             # Add the successful submission to pipeline before terminating
             response += output
-            pipeline.add(response)
+            session.add_user(response)
             return None
 
         # First check if API key is empty
         if not args.platform_api_key or args.platform_api_key.strip() == "":
             logger.error("|- API key is blank/empty")
-            pipeline.add(
+            session.add_user(
                 "<error>API key is blank or empty. This run cannot continue without a valid API key.</error>",
             )
             return None
@@ -519,14 +484,14 @@ async def run_step(
         logger.warning(f"|- Giving up:\n{give_up.summary}")
         return None
 
-    pipeline.add(response)
+    session.add_user(response)
 
     # Pipeline updated with execution results - let model process them in next step
 
-    return pipeline
+    return session
 
 
-@dn.task(name="Attempt challenge")
+@dn.task(name="Attempt challenge")  # type: ignore[untyped-decorator]
 async def attempt_challenge(
     args: AIRTBenchArgs,
     challenge: Challenge,
@@ -608,46 +573,11 @@ async def attempt_challenge(
 
     # Pipeline
 
-    generator = rg.get_generator(args.model)
-
-    if "vertex_ai" in generator.model or "gemini" in generator.model:
-        generator.params = rg.GenerateParams(
-            extra={
-                "safety_settings": [
-                    {
-                        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        "threshold": "BLOCK_ONLY_HIGH",
-                    },
-                ],
-            },
-        )
-
-    generator.params.timeout = args.inference_timeout
-
-    def on_backoff(details: backoff.types.Details) -> None:
-        logger.warning(f"Backing off {details['wait']:.2f}s")
-
-    retry_errors = (
-        litellm.exceptions.RateLimitError,
-        litellm.exceptions.APIError,
-        # Don't include ServiceUnavailableError or APIConnectionError here as they terminate the challenge
-    )
-
-    backoff_wrapper = backoff.on_exception(
-        backoff.expo,
-        retry_errors,
-        max_time=5 * 60,
-        max_value=60,
-        on_backoff=on_backoff,
-        jitter=backoff.random_jitter,
-    )
-
-    pipeline: rg.ChatPipeline | None = (
-        generator.wrap(backoff_wrapper)
-        .chat(
-            [{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}],
-        )
-        .cache("latest" if args.enable_cache else False)
+    session: ChatSession | None = ChatSession(
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt},
+        ],
     )
 
     # Start the kernel
@@ -666,19 +596,18 @@ async def attempt_challenge(
                 except Exception as e:
                     logger.warning(f"Cleanup routine failed: {e}")
 
-            if pipeline is None:
+            if session is None:
                 dn.log_metric("steps_taken", step)
                 logger.info(f"|- Completed in {step}/{args.max_steps} steps")
                 break
-            pipeline = await run_step.with_(
+            session = await run_step.with_(
                 name=f"Challenge {challenge.id} - step {step}/{args.max_steps}",
             )(
                 args,
                 challenge,
-                pipeline,
+                session,
                 kernel,
-                generator,
-                backoff_wrapper,
+                step,
             )
         else:
             logger.warning("|- Max steps reached")
@@ -703,15 +632,35 @@ async def main(
     if not args.platform_api_key:
         args.platform_api_key = os.environ.get("PLATFORM_API_KEY") or os.environ.get("DREADNODE_API_TOKEN")
 
+    if args.verify_harness:
+        verification = verify_harness_configuration(
+            challenge_dir=g_challenge_dir,
+            container_dir=g_container_dir,
+        )
+        for check in verification.checks:
+            status = "PASS" if check.passed else "FAIL"
+            logger.info(f"[{status}] {check.name}: {check.detail}")
+        if not verification.passed:
+            logger.error("Harness verification failed")
+        return
+
     if not args.platform_api_key:
         logger.error("Platform API key is required. Set it via --platform-api-key or PLATFORM_API_KEY environment variable.")
         return
 
     dn_args = dn_args or DreadnodeArgs()
+    sdk_api_key = (
+        dn_args.api_key
+        or dn_args.token
+        or os.environ.get("DREADNODE_API_KEY")
+        or os.environ.get("DREADNODE_API_TOKEN")
+        or os.environ.get("DREADNODE_TOKEN")
+    )
+
     dn.configure(
         server=dn_args.server,
-        token=dn_args.token,
-        local_dir=dn_args.local_dir or False,
+        api_key=sdk_api_key,
+        cache=dn_args.cache or dn_args.local_dir,
         project=dn_args.project,
         organization=dn_args.organization,
         workspace=dn_args.workspace,
@@ -728,12 +677,7 @@ async def main(
 
     # Build the container
     try:
-        image = build_container(
-            "airtbench",
-            g_container_dir / "Dockerfile",
-            g_container_dir,
-            memory_limit=args.memory_limit,
-        )
+        image = build_container("airtbench", g_container_dir / "Dockerfile", g_container_dir)
     except RuntimeError as e:
         if "Docker connection failed" in str(e):
             logger.error("Cannot proceed without Docker. Please start Docker and try again.")

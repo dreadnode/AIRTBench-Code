@@ -30,9 +30,7 @@ tasks:
       - task: check-command
         vars: { COMMAND: docker }
       - task: check-command
-        vars: { COMMAND: python3 }
-      - task: check-command
-        vars: { COMMAND: ruby }
+        vars: { COMMAND: uv }
 
   setup-env:
     internal: true
@@ -71,7 +69,7 @@ tasks:
     cmds:
       - task: setup-env
       - task: setup-git-hooks
-      - poetry install
+      - uv sync --all-groups
       - task: pre-commit:install
       - echo "Project is ready to go! 🚀"
 
@@ -93,27 +91,26 @@ tasks:
         find . -type f -name "*.pyd" -delete
         rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/ build/ dist/ ./*.egg-info/
 
-  # Poetry and API tasks
-  poetry:
-    desc: Run poetry in the API directory
+  # uv and API tasks
+  uv:
+    desc: Run uv in the API directory
     vars:
       ARGS: '{{.CLI_ARGS}}'
     cmds:
-      - task: deactivate
-      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && poetry {{.ARGS}}
+      - cd {{.API_DIR}} && export PYTHONPATH="$(pwd)" && uv {{.ARGS}}
 
   mypy:
     desc: Run type checking with mypy
     cmds:
-      - task: poetry
+      - task: uv
         vars: { ARGS: "run mypy ." }
 
   ruff:
     desc: Run linting and formatting with ruff
     cmds:
-      - task: poetry
+      - task: uv
         vars: { ARGS: "run ruff check ." }
-      - task: poetry
+      - task: uv
         vars: { ARGS: "run ruff format ." }
 
   pytest:
@@ -121,7 +118,7 @@ tasks:
     vars:
       ARGS: '{{default "--cov=. --cov-report=term-missing tests/" .CLI_ARGS}}'
     cmds:
-      - task: poetry
+      - task: uv
         vars: { ARGS: "run pytest {{.ARGS}}" }
 
   # GitHub tasks

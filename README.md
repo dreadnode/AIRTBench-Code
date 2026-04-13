@@ -78,7 +78,7 @@ Technical documentation for the AIRTBench agent is available in the [Dreadnode S
 
 <mark>In order to run the code, you will need access to the Dreadnode strikes platform, see the [docs](https://docs.Dreadnode.io/strikes/overview) or submit for the Strikes waitlist [here](https://platform.dreadnode.io/waitlist/strikes)</mark>.
 
-This [rigging](https://docs.dreadnode.io/open-source/rigging/intro)-based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile).
+This Dreadnode SDK v2 and LiteLLM based agent works to solve a variety of AI ML CTF challenges from the dreadnode [Crucible](https://platform.dreadnode.io/crucible) platform and given access to execute python commands on a network-local container with custom [Dockerfile](./airtbench/container/Dockerfile).
 
 ```bash
 uv run -m airtbench --help
@@ -91,7 +91,7 @@ uv run -m airtbench \
   --model $MODEL \
   --project $PROJECT \
   --platform-api-key $DREADNODE_TOKEN \
-  --token $DREADNODE_TOKEN \
+  --api-key $DREADNODE_TOKEN \
   --server https://platform.dreadnode.io \
   --organization $ORGANIZATION \
   --max-steps 100 \
@@ -122,7 +122,7 @@ uv run -m airtbench \
   --model openai/gpt-4o \
   --project airtbench \
   --platform-api-key $DREADNODE_TOKEN \
-  --token $DREADNODE_TOKEN \
+  --api-key $DREADNODE_TOKEN \
   --server https://platform.dreadnode.io \
   --organization "dreadnode" \
   --challenges bear1

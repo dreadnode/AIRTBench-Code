@@ -276,7 +276,7 @@ class PythonKernel:
             session.get(
                 f"{self.base_url}/api/status",
                 params={"token": self._token},
-                timeout=1,
+                timeout=aiohttp.ClientTimeout(total=1),
             ) as response,
         ):
             response.raise_for_status()
@@ -491,7 +491,7 @@ class PythonKernel:
             while (start_time + timeout) > asyncio.get_event_loop().time():
                 try:
                     msg = await asyncio.wait_for(ws.receive_json(), timeout=1.0)
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     continue
 
                 # Ensure this is for us
@@ -568,7 +568,7 @@ class PythonKernel:
                     break
             else:
                 await self.interrupt()
-                raise asyncio.TimeoutError("Execution timed out")
+                raise TimeoutError("Execution timed out")
 
         execution = KernelExecution(
             source=source,
